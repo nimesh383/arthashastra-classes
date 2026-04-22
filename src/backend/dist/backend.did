@@ -1,0 +1,486 @@
+type VideoInput = 
+ record {
+   courseId: text;
+   description: text;
+   isPreview: bool;
+   order: nat;
+   thumbnailUrl: text;
+   title: text;
+   videoUrl: text;
+ };
+type Video = 
+ record {
+   courseId: text;
+   createdAt: Timestamp;
+   createdBy: principal;
+   description: text;
+   id: text;
+   isPreview: bool;
+   order: nat;
+   thumbnailUrl: text;
+   title: text;
+   videoUrl: text;
+ };
+type Timestamp = int;
+type TestimonialInput = 
+ record {
+   isVideo: bool;
+   isVisible: bool;
+   marks: text;
+   photoUrl: opt text;
+   rating: nat;
+   studentName: text;
+   subject: text;
+   "text": text;
+ };
+type Testimonial = 
+ record {
+   createdAt: Timestamp;
+   id: text;
+   isVideo: bool;
+   isVisible: bool;
+   marks: text;
+   photoUrl: opt text;
+   rating: nat;
+   studentName: text;
+   subject: text;
+   "text": text;
+ };
+type TeacherInput = 
+ record {
+   email: text;
+   name: text;
+   profilePhotoUrl: opt text;
+   specialization: text;
+ };
+type Teacher = 
+ record {
+   email: text;
+   id: nat;
+   isDeleted: bool;
+   name: text;
+   profilePhotoUrl: opt text;
+   specialization: text;
+ };
+type Subject = 
+ variant {
+   Accountancy;
+   BST;
+   Commerce;
+   Economics;
+   Maths;
+ };
+type StudyMaterial = 
+ record {
+   courseId: nat;
+   description: text;
+   fileKey: text;
+   fileSize: opt text;
+   fileType: FileType;
+   fileUrl: text;
+   id: nat;
+   isDeleted: bool;
+   materialType: MaterialType;
+   subject: Subject;
+   title: text;
+   uploadDate: Timestamp;
+   uploadedAt: Timestamp;
+ };
+type StudentProfile = 
+ record {
+   completedTests: vec nat;
+   email: text;
+   enrolledCourses: vec nat;
+   name: text;
+   phone: text;
+   userId: principal;
+ };
+type SiteSettings = 
+ record {
+   contactAddress: text;
+   contactEmail: text;
+   contactPhone: text;
+   ctaText: text;
+   heroSubtext: text;
+   heroText: text;
+   instagramUrl: text;
+   linkedinUrl: text;
+   telegramUrl: text;
+   whatsappNumber: text;
+   youtubeUrl: text;
+ };
+type PurchaseCourseInput = 
+ record {
+   amountPaid: nat;
+   courseId: nat;
+   paymentId: text;
+ };
+type ProfileInput = 
+ record {
+   email: text;
+   name: text;
+   phone: text;
+ };
+type ProductInput = 
+ record {
+   category: Category;
+   description: text;
+   imageUrl: text;
+   isAvailable: bool;
+   price: float64;
+   title: text;
+ };
+type Product = 
+ record {
+   category: Category;
+   createdAt: Timestamp;
+   description: text;
+   id: nat;
+   imageUrl: text;
+   isAvailable: bool;
+   price: float64;
+   title: text;
+ };
+type NotificationType = 
+ variant {
+   announcement;
+   enrollment;
+   general;
+   payment;
+ };
+type NotificationInput = 
+ record {
+   message: text;
+   notificationType: NotificationType;
+   targetUserId: opt principal;
+   title: text;
+ };
+type Notification = 
+ record {
+   createdAt: Timestamp;
+   id: text;
+   isRead: bool;
+   message: text;
+   notificationType: NotificationType;
+   title: text;
+   userId: principal;
+ };
+type MaterialType = 
+ variant {
+   Notes;
+   PDF;
+   PYQ;
+ };
+type MaterialInput = 
+ record {
+   courseId: nat;
+   description: text;
+   fileSize: opt text;
+   fileType: FileType;
+   fileUrl: text;
+   title: text;
+ };
+type Level = 
+ variant {
+   Advanced;
+   Beginner;
+   Class11;
+   Class12;
+   Dropper;
+   Intermediate;
+ };
+type ItemType = 
+ variant {
+   course;
+   material;
+   video;
+ };
+type GalleryImageInput = 
+ record {
+   category: GalleryCategory;
+   description: opt text;
+   imageUrl: text;
+   isVisible: bool;
+   title: text;
+ };
+type GalleryImage = 
+ record {
+   category: GalleryCategory;
+   createdAt: Timestamp;
+   description: opt text;
+   id: text;
+   imageUrl: text;
+   isVisible: bool;
+   title: text;
+ };
+type GalleryCategory = 
+ variant {
+   classroom;
+   events;
+   results;
+   team;
+ };
+type FileType = 
+ variant {
+   Image;
+   PDF;
+ };
+type FeedbackInput = 
+ record {
+   comment: text;
+   courseId: text;
+   rating: nat;
+ };
+type Feedback = 
+ record {
+   comment: text;
+   courseId: text;
+   createdAt: Timestamp;
+   id: text;
+   rating: nat;
+   studentId: principal;
+ };
+type EnrollmentStatus = 
+ variant {
+   Completed;
+   Failed;
+   Pending;
+   Refunded;
+ };
+type EnrollmentAdminView = 
+ record {
+   courseName: text;
+   coursePrice: nat;
+   enrollment: Enrollment;
+   studentPrincipal: text;
+ };
+type Enrollment = 
+ record {
+   amountPaid: nat;
+   courseId: nat;
+   id: nat;
+   paymentId: text;
+   purchasedAt: Timestamp;
+   refundedAt: opt Timestamp;
+   status: EnrollmentStatus;
+   studentId: principal;
+ };
+type EnquiryStatus = 
+ variant {
+   Contacted;
+   Pending;
+ };
+type EnquiryInput = 
+ record {
+   course: opt text;
+   email: text;
+   message: text;
+   name: text;
+   phone: text;
+ };
+type Enquiry = 
+ record {
+   course: opt text;
+   email: text;
+   id: nat;
+   message: text;
+   name: text;
+   phone: text;
+   status: EnquiryStatus;
+   timestamp: Timestamp;
+ };
+type DiscountType = 
+ variant {
+   flat;
+   percent;
+ };
+type CourseInput = 
+ record {
+   description: text;
+   duration: text;
+   imageUrl: opt text;
+   level: Level;
+   price: nat;
+   subject: Subject;
+   teacherIds: vec nat;
+   title: text;
+ };
+type Course = 
+ record {
+   createdAt: Timestamp;
+   description: text;
+   duration: text;
+   fees: nat;
+   id: nat;
+   imageUrl: opt text;
+   instructor: text;
+   isDeleted: bool;
+   level: Level;
+   price: nat;
+   subject: Subject;
+   teacherIds: vec nat;
+   title: text;
+ };
+type CouponInput = 
+ record {
+   code: text;
+   discountType: DiscountType;
+   expiresAt: opt Timestamp;
+   isActive: bool;
+   maxUses: nat;
+   value: float64;
+ };
+type Coupon = 
+ record {
+   code: text;
+   createdAt: Timestamp;
+   discountType: DiscountType;
+   expiresAt: opt Timestamp;
+   id: text;
+   isActive: bool;
+   maxUses: nat;
+   usedCount: nat;
+   value: float64;
+ };
+type ConfirmPaymentInput = 
+ record {
+   enrollmentId: nat;
+   paymentId: text;
+ };
+type Category = 
+ variant {
+   Book;
+   DigitalResource;
+   Merchandise;
+   Notes;
+ };
+type BookmarkInput = 
+ record {
+   itemId: text;
+   itemType: ItemType;
+ };
+type Bookmark = 
+ record {
+   createdAt: Timestamp;
+   id: text;
+   itemId: text;
+   itemType: ItemType;
+   userId: principal;
+ };
+type AnnouncementType = 
+ variant {
+   info;
+   urgent;
+   warning;
+ };
+type AnnouncementInput = 
+ record {
+   announcementType: AnnouncementType;
+   expiresAt: opt Timestamp;
+   isActive: bool;
+   isPinned: bool;
+   message: text;
+   title: text;
+ };
+type Announcement = 
+ record {
+   announcementType: AnnouncementType;
+   createdAt: Timestamp;
+   expiresAt: opt Timestamp;
+   id: text;
+   isActive: bool;
+   isPinned: bool;
+   message: text;
+   title: text;
+ };
+type AdminStudentView = 
+ record {
+   completedEnrollmentsCount: nat;
+   profile: StudentProfile;
+ };
+service : {
+  addBookmark: (input: BookmarkInput) -> (Bookmark);
+  confirmPayment: (input: ConfirmPaymentInput) -> (opt Enrollment);
+  createAnnouncement: (input: AnnouncementInput) -> (Announcement);
+  createCoupon: (input: CouponInput) -> (Coupon);
+  createCourse: (input: CourseInput) -> (Course);
+  createGalleryImage: (input: GalleryImageInput) -> (GalleryImage);
+  createNotification: (input: NotificationInput) -> (vec Notification);
+  createProduct: (input: ProductInput) -> (Product);
+  createTeacher: (input: TeacherInput) -> (Teacher);
+  createTestimonial: (input: TestimonialInput) -> (Testimonial);
+  createVideo: (input: VideoInput) -> (variant {
+                                         err: text;
+                                         ok: Video;
+                                       });
+  deleteAnnouncement: (id: text) -> (bool);
+  deleteCoupon: (id: text) -> (bool);
+  deleteCourse: (id: nat) -> (bool);
+  deleteGalleryImage: (id: text) -> (bool);
+  deleteMaterial: (id: nat) -> (bool);
+  deleteProduct: (id: nat) -> (bool);
+  deleteTeacher: (id: nat) -> (bool);
+  deleteTestimonial: (id: text) -> (bool);
+  deleteVideo: (id: text) -> (variant {
+                                err: text;
+                                ok;
+                              });
+  enrollInCourse: (courseId: nat) -> (bool);
+  getActiveAnnouncements: () -> (vec Announcement) query;
+  getAdminCoupons: () -> (vec Coupon) query;
+  getAdminCourses: () -> (vec Course) query;
+  getAdminPayments: () -> (vec EnrollmentAdminView) query;
+  getAdminProducts: () -> (vec Product) query;
+  getAdminStudents: () -> (vec AdminStudentView) query;
+  getAvailableCourses: () -> (vec Course) query;
+  getCourseDetail: (id: nat) -> (opt Course) query;
+  getCourses: () -> (vec Course) query;
+  getEnquiries: () -> (vec Enquiry) query;
+  getFeedback: () -> (vec Feedback) query;
+  getFeedbackByCourse: (courseId: text) -> (vec Feedback) query;
+  getGalleryImages: (category: opt GalleryCategory) ->
+   (vec GalleryImage) query;
+  getMaterialsForCourse: (courseId: nat) -> (vec StudyMaterial) query;
+  getMyBookmarks: () -> (vec Bookmark) query;
+  getMyEnrollments: () -> (vec Enrollment) query;
+  getMyFeedback: () -> (vec Feedback) query;
+  getMyMaterials: () -> (vec StudyMaterial) query;
+  getMyNotifications: () -> (vec Notification) query;
+  getMyVideosForCourse: (courseId: text) ->
+   (variant {
+      err: text;
+      ok: vec Video;
+    }) query;
+  getPreviewVideos: () -> (vec Video) query;
+  getProductDetail: (id: nat) -> (opt Product) query;
+  getProducts: () -> (vec Product) query;
+  getSiteSettings: () -> (SiteSettings) query;
+  getStudentProfile: () -> (opt StudentProfile) query;
+  getStudyMaterials: () -> (vec StudyMaterial) query;
+  getTeacher: (id: nat) -> (opt Teacher) query;
+  getTeachers: () -> (vec Teacher) query;
+  getTestimonials: () -> (vec Testimonial) query;
+  getVideos: () -> (vec Video) query;
+  getVideosByCourse: (courseId: text) -> (vec Video) query;
+  isEnrolled: (courseId: nat) -> (bool) query;
+  markAllNotificationsRead: () -> (nat);
+  markNotificationRead: (id: text) -> (bool);
+  purchaseCourse: (input: PurchaseCourseInput) -> (Enrollment);
+  removeBookmark: (itemId: text) -> (bool);
+  submitEnquiry: (input: EnquiryInput) -> (nat);
+  submitFeedback: (input: FeedbackInput) -> (Feedback);
+  toggleAnnouncementActive: (id: text) -> (opt Announcement);
+  toggleGalleryImageVisibility: (id: text) -> (opt GalleryImage);
+  toggleTestimonialVisibility: (id: text) -> (opt Testimonial);
+  updateAnnouncement: (id: text, input: AnnouncementInput) ->
+   (opt Announcement);
+  updateCoupon: (id: text, input: CouponInput) -> (opt Coupon);
+  updateCourse: (id: nat, input: CourseInput) -> (opt Course);
+  updateProduct: (id: nat, input: ProductInput) -> (opt Product);
+  updateSiteSettings: (settings: SiteSettings) -> (SiteSettings);
+  updateStudentProfile: (input: ProfileInput) -> ();
+  updateTeacher: (id: nat, input: TeacherInput) -> (opt Teacher);
+  updateTestimonial: (id: text, input: TestimonialInput) -> (opt Testimonial);
+  uploadMaterial: (input: MaterialInput) -> (StudyMaterial);
+  validateCoupon: (code: text) -> (opt Coupon) query;
+}

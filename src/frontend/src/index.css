@@ -1,0 +1,271 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --font-display: "Space Grotesk";
+    --font-body: "Plus Jakarta Sans";
+    --font-mono: "JetBrains Mono";
+    --radius: 0.5rem;
+
+    --background: 0.99 0 0;
+    --foreground: 0.15 0 0;
+    --card: 1.0 0 0;
+    --card-foreground: 0.15 0 0;
+    --popover: 1.0 0 0;
+    --popover-foreground: 0.15 0 0;
+
+    --primary: 0.35 0 0;
+    --primary-foreground: 0.98 0 0;
+
+    --secondary: 0.95 0 0;
+    --secondary-foreground: 0.25 0 0;
+    --muted: 0.95 0 0;
+    --muted-foreground: 0.5 0 0;
+
+    --accent: 0.35 0 0;
+    --accent-foreground: 0.98 0 0;
+
+    --destructive: 0.55 0.22 25;
+    --destructive-foreground: 0.98 0 0;
+
+    --border: 0.9 0 0;
+    --input: 0.9 0 0;
+    --ring: 0.35 0 0;
+
+    --chart-1: 0.65 0.22 40;
+    --chart-2: 0.6 0.12 185;
+    --chart-3: 0.4 0.07 227;
+    --chart-4: 0.83 0.19 84;
+    --chart-5: 0.77 0.19 70;
+
+    --sidebar: 0.98 0 0;
+    --sidebar-foreground: 0.15 0 0;
+    --sidebar-primary: 0.35 0 0;
+    --sidebar-primary-foreground: 0.98 0 0;
+    --sidebar-accent: 0.95 0 0;
+    --sidebar-accent-foreground: 0.25 0 0;
+    --sidebar-border: 0.9 0 0;
+    --sidebar-ring: 0.35 0 0;
+  }
+
+  .dark {
+    --background: 0.12 0.05 260;
+    --foreground: 0.92 0.02 260;
+    --card: 0.18 0.08 260;
+    --card-foreground: 0.9 0.03 260;
+    --popover: 0.22 0.1 260;
+    --popover-foreground: 0.9 0.03 260;
+
+    --primary: 0.68 0.24 200;
+    --primary-foreground: 0.12 0.05 260;
+
+    --secondary: 0.55 0.2 270;
+    --secondary-foreground: 0.92 0.02 260;
+    --muted: 0.28 0.08 260;
+    --muted-foreground: 0.65 0.05 260;
+
+    --accent: 0.6 0.25 290;
+    --accent-foreground: 0.12 0.05 260;
+
+    --destructive: 0.62 0.21 25;
+    --destructive-foreground: 0.95 0.02 260;
+
+    --success: 0.65 0.22 140;
+    --success-foreground: 0.12 0.05 260;
+
+    --warning: 0.75 0.19 65;
+    --warning-foreground: 0.12 0.05 260;
+
+    --border: 0.25 0.1 260;
+    --input: 0.2 0.08 260;
+    --ring: 0.68 0.24 200;
+
+    --chart-1: 0.68 0.24 200;
+    --chart-2: 0.6 0.25 290;
+    --chart-3: 0.55 0.2 270;
+    --chart-4: 0.65 0.22 15;
+    --chart-5: 0.62 0.21 25;
+
+    --sidebar: 0.16 0.07 260;
+    --sidebar-foreground: 0.92 0.02 260;
+    --sidebar-primary: 0.68 0.24 200;
+    --sidebar-primary-foreground: 0.12 0.05 260;
+    --sidebar-accent: 0.6 0.25 290;
+    --sidebar-accent-foreground: 0.12 0.05 260;
+    --sidebar-border: 0.28 0.1 260;
+    --sidebar-ring: 0.68 0.24 200;
+
+    --admin-bg-hover: 0.22 0.08 260;
+    --admin-text-secondary: 0.72 0.03 260;
+    --admin-border-light: 0.3 0.12 260;
+  }
+
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground font-body antialiased;
+  }
+}
+
+@font-face {
+  font-family: "Space Grotesk";
+  src: url("/assets/fonts/SpaceGrotesk.woff2") format("woff2");
+  font-weight: 400 700;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Plus Jakarta Sans";
+  src: url("/assets/fonts/PlusJakartaSans.woff2") format("woff2");
+  font-weight: 400 700;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "JetBrains Mono";
+  src: url("/assets/fonts/JetBrainsMono.woff2") format("woff2");
+  font-weight: 400 700;
+  font-display: swap;
+}
+
+@layer utilities {
+  .transition-smooth {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .glow-cyan {
+    box-shadow: 0 0 20px oklch(0.68 0.24 200 / 0.6), 0 0 40px
+      oklch(0.68 0.24 200 / 0.3), inset 0 0 20px oklch(0.68 0.24 200 / 0.1);
+  }
+
+  .glow-violet {
+    box-shadow: 0 0 20px oklch(0.55 0.2 270 / 0.6), 0 0 40px
+      oklch(0.55 0.2 270 / 0.3), inset 0 0 20px oklch(0.55 0.2 270 / 0.1);
+  }
+
+  .glow-magenta {
+    box-shadow: 0 0 20px oklch(0.6 0.25 290 / 0.6), 0 0 40px
+      oklch(0.6 0.25 290 / 0.3), inset 0 0 20px oklch(0.6 0.25 290 / 0.1);
+  }
+
+  .glow-success {
+    box-shadow: 0 0 20px oklch(0.65 0.22 140 / 0.5), 0 0 10px
+      oklch(0.65 0.22 140 / 0.3);
+  }
+
+  .glass-morphism {
+    @apply bg-black/10 backdrop-blur-xl border border-white/10;
+  }
+
+  .neon-border-cyan {
+    @apply border border-cyan-500 shadow-[0_0_15px_oklch(0.68_0.24_200/0.5)];
+  }
+
+  .neon-border-violet {
+    @apply border border-violet-500 shadow-[0_0_15px_oklch(0.55_0.20_270/0.5)];
+  }
+
+  .gradient-text-cyan-violet {
+    @apply bg-gradient-to-r from-cyan-400 to-violet-500 bg-clip-text text-transparent;
+  }
+
+  /* Admin Portal Utilities */
+  .admin-sidebar-nav {
+    @apply flex items-center gap-3 px-4 py-3 rounded-md transition-smooth cursor-pointer hover:bg-[oklch(var(--admin-bg-hover))];
+  }
+
+  .admin-sidebar-nav-active {
+    @apply bg-[oklch(var(--sidebar-primary))] text-[oklch(var(--sidebar-primary-foreground))];
+  }
+
+  .admin-table-row-hover {
+    @apply hover:bg-[oklch(var(--admin-bg-hover))] transition-smooth;
+  }
+
+  .admin-badge {
+    @apply inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm font-medium transition-smooth;
+  }
+
+  .badge-success {
+    @apply bg-[oklch(var(--success)/0.15)] text-[oklch(var(--success))] border border-[oklch(var(--success)/0.3)];
+  }
+
+  .badge-warning {
+    @apply bg-[oklch(var(--warning)/0.15)] text-[oklch(var(--warning))] border border-[oklch(var(--warning)/0.3)];
+  }
+
+  .badge-destructive {
+    @apply bg-[oklch(var(--destructive)/0.15)] text-[oklch(var(--destructive))] border border-[oklch(var(--destructive)/0.3)];
+  }
+
+  .badge-primary {
+    @apply bg-[oklch(var(--primary)/0.15)] text-[oklch(var(--primary))] border border-[oklch(var(--primary)/0.3)];
+  }
+
+  .admin-action-btn {
+    @apply inline-flex items-center justify-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-smooth hover:scale-105;
+  }
+
+  .admin-action-btn-edit {
+    @apply bg-[oklch(var(--secondary)/0.2)] text-[oklch(var(--secondary))] hover:bg-[oklch(var(--secondary)/0.3)];
+  }
+
+  .admin-action-btn-delete {
+    @apply bg-[oklch(var(--destructive)/0.2)] text-[oklch(var(--destructive))] hover:bg-[oklch(var(--destructive)/0.3)];
+  }
+
+  .admin-file-drop-zone {
+    @apply border-2 border-dashed border-[oklch(var(--admin-border-light))] rounded-lg p-8 text-center transition-smooth cursor-pointer hover:border-[oklch(var(--primary))] hover:bg-[oklch(var(--admin-bg-hover))];
+  }
+
+  .admin-modal-overlay {
+    @apply fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center;
+  }
+
+  .admin-modal-content {
+    @apply glass-morphism rounded-2xl shadow-2xl max-w-2xl w-full mx-4 p-8;
+  }
+
+  .admin-form-field {
+    @apply flex flex-col gap-2;
+  }
+
+  .admin-form-label {
+    @apply text-sm font-semibold text-[oklch(var(--admin-text-secondary))];
+  }
+
+  .admin-form-input {
+    @apply bg-[oklch(var(--input))] text-[oklch(var(--foreground))] border border-[oklch(var(--border))] rounded-lg px-4 py-2 transition-smooth focus:outline-none focus:ring-2 focus:ring-[oklch(var(--primary))];
+  }
+
+  .admin-data-table {
+    @apply w-full border-collapse;
+  }
+
+  .admin-table-header {
+    @apply bg-[oklch(var(--admin-bg-hover))] border-b border-[oklch(var(--admin-border-light))];
+  }
+
+  .admin-table-th {
+    @apply px-4 py-3 text-left text-sm font-semibold text-[oklch(var(--admin-text-secondary))] uppercase tracking-wide;
+  }
+
+  .admin-table-td {
+    @apply px-4 py-3 text-sm text-[oklch(var(--foreground))] border-b border-[oklch(var(--admin-border-light))];
+  }
+
+  .admin-role-badge-admin {
+    @apply badge-primary;
+  }
+
+  .admin-role-badge-teacher {
+    @apply badge-warning;
+  }
+
+  .admin-role-badge-student {
+    @apply badge-success;
+  }
+}

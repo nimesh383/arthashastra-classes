@@ -1,0 +1,28 @@
+{
+  "overview": "A next-generation, cinematic ed-tech platform for Arthashastra Classes — a commerce coaching institute in Bhopal, India. Features immersive 3D animations, real authentication, a full admin content management system, student and teacher dashboards, Stripe payments, and a dynamic course library — all wrapped in a futuristic glassmorphism design.",
+  "features": [
+    "Cinematic 3D hero with floating particles and animated counters",
+    "Role-based access: student, teacher, and admin portals",
+    "Full admin CMS: manage courses, teachers, testimonials, announcements, and site settings",
+    "Student dashboard with enrolled courses, materials, and progress tracking",
+    "Stripe-powered course and store checkout with coupon codes",
+    "Gallery with lightbox, category filters, and event photos",
+    "Dynamic announcement banner and testimonials carousel from backend data",
+    "Faculty detail pages with qualifications and ratings",
+    "Legal pages: Privacy Policy, Terms, and Refund Policy",
+    "WhatsApp chat button, back-to-top, exit-intent lead popup, and mobile CTA bar",
+    "Bookmarks and notification center in student dashboard",
+    "404 animated error page and cookie consent banner"
+  ],
+  "category": "education",
+  "tags": [
+    "edtech",
+    "coaching",
+    "commerce",
+    "dashboard",
+    "payments",
+    "animations",
+    "glassmorphism"
+  ],
+  "last_updated": "2026-04-15T17:48:37.351Z"
+}

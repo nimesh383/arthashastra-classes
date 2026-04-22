@@ -1,0 +1,316 @@
+// Version: 1.0.0
+type AnnouncementType__828365556 = {#info; #urgent; #warning};
+type Announcement__160704614 =
+  {
+    announcementType : AnnouncementType__828365556;
+    createdAt : Timestamp__301639476;
+    expiresAt : ?Timestamp__301639476;
+    id : Text;
+    isActive : Bool;
+    isPinned : Bool;
+    message : Text;
+    title : Text
+  };
+type Bookmark__499882045 =
+  {
+    createdAt : Timestamp__301639476;
+    id : Text;
+    itemId : Text;
+    itemType : ItemType__1061646159;
+    userId : Principal
+  };
+type Category__8224233 = {#Book; #DigitalResource; #Merchandise; #Notes};
+type Coupon__243002030 =
+  {
+    code : Text;
+    createdAt : Timestamp__301639476;
+    discountType : DiscountType__846355383;
+    expiresAt : ?Timestamp__301639476;
+    id : Text;
+    isActive : Bool;
+    maxUses : Nat;
+    usedCount : Nat;
+    value : Float
+  };
+type Course__321233390 =
+  {
+    createdAt : Timestamp__301639476;
+    description : Text;
+    duration : Text;
+    fees : Nat;
+    id : Nat;
+    imageUrl : ?Text;
+    instructor : Text;
+    isDeleted : Bool;
+    level : Level__648726349;
+    price : Nat;
+    subject : Subject__587511175;
+    teacherIds : [Nat];
+    title : Text
+  };
+type Data__791452850<K, V> =
+  {var count : Nat__490723111; kvs : [var ?(K, V)]};
+type DiscountType__846355383 = {#flat; #percent};
+type EnquiryStatus__663100040 = {#Contacted; #Pending};
+type Enquiry__222490994 = Enquiry__302813802;
+type Enquiry__302813802 =
+  {
+    course : ?Text;
+    email : Text;
+    id : Nat;
+    message : Text;
+    name : Text;
+    phone : Text;
+    status : EnquiryStatus__663100040;
+    timestamp : Timestamp__301639476
+  };
+type EnrollmentStatus__93864562 = {#Completed; #Failed; #Pending; #Refunded};
+type Enrollment__624009645 =
+  {
+    amountPaid : Nat;
+    courseId : Nat;
+    id : Nat;
+    paymentId : Text;
+    purchasedAt : Timestamp__301639476;
+    refundedAt : ?Timestamp__301639476;
+    status : EnrollmentStatus__93864562;
+    studentId : Principal
+  };
+type Feedback__34322984 =
+  {
+    comment : Text;
+    courseId : Text;
+    createdAt : Timestamp__301639476;
+    id : Text;
+    rating : Nat;
+    studentId : Principal
+  };
+type FileType__924317754 = {#Image; #PDF};
+type GalleryCategory__142734157 = {#classroom; #events; #results; #team};
+type GalleryImage__1001354798 =
+  {
+    category : GalleryCategory__142734157;
+    createdAt : Timestamp__301639476;
+    description : ?Text;
+    id : Text;
+    imageUrl : Text;
+    isVisible : Bool;
+    title : Text
+  };
+type Internal__8484328<K, V> =
+  {children : [var ?Node__46230540<K, V>]; data : Data__791452850<K, V>};
+type ItemType__1061646159 = {#course; #material; #video};
+type Leaf__809889148<K, V> = {data : Data__791452850<K, V>};
+type Level__648726349 =
+  {#Advanced; #Beginner; #Class11; #Class12; #Dropper; #Intermediate};
+type MaterialType__11858968 = {#Notes; #PDF; #PYQ};
+type Nat__490723111 = Nat__920180692;
+type Nat__920180692 = Nat;
+type Node__46230540<K, V> =
+  {#internal : Internal__8484328<K, V>; #leaf : Leaf__809889148<K, V>};
+type NotificationType__908192046 =
+  {#announcement; #enrollment; #general; #payment};
+type Notification__264708741 =
+  {
+    createdAt : Timestamp__301639476;
+    id : Text;
+    isRead : Bool;
+    message : Text;
+    notificationType : NotificationType__908192046;
+    title : Text;
+    userId : Principal
+  };
+type Product__750902660 =
+  {
+    category : Category__8224233;
+    createdAt : Timestamp__301639476;
+    description : Text;
+    id : Nat;
+    imageUrl : Text;
+    isAvailable : Bool;
+    price : Float;
+    title : Text
+  };
+type StudentProfile__553316508 =
+  {
+    completedTests : [Nat];
+    email : Text;
+    enrolledCourses : [Nat];
+    name : Text;
+    phone : Text;
+    userId : Principal
+  };
+type StudyMaterial__847768103 =
+  {
+    courseId : Nat;
+    description : Text;
+    fileKey : Text;
+    fileSize : ?Text;
+    fileType : FileType__924317754;
+    fileUrl : Text;
+    id : Nat;
+    isDeleted : Bool;
+    materialType : MaterialType__11858968;
+    subject : Subject__1034835876;
+    title : Text;
+    uploadDate : Timestamp__301639476;
+    uploadedAt : Timestamp__301639476
+  };
+type Subject__1034835876 =
+  {#Accountancy; #BST; #Commerce; #Economics; #Maths};
+type Subject__587511175 = {#Accountancy; #BST; #Commerce; #Economics; #Maths};
+type Teacher__896081680 =
+  {
+    email : Text;
+    id : Nat;
+    isDeleted : Bool;
+    name : Text;
+    profilePhotoUrl : ?Text;
+    specialization : Text
+  };
+type Testimonial__391666464 =
+  {
+    createdAt : Timestamp__301639476;
+    id : Text;
+    isVideo : Bool;
+    isVisible : Bool;
+    marks : Text;
+    photoUrl : ?Text;
+    rating : Nat;
+    studentName : Text;
+    subject : Text;
+    text : Text
+  };
+type Timestamp__301639476 = Int;
+type Video__1035008865 =
+  {
+    courseId : Text;
+    createdAt : Timestamp__301639476;
+    createdBy : Principal;
+    description : Text;
+    id : Text;
+    isPreview : Bool;
+    order : Nat;
+    thumbnailUrl : Text;
+    title : Text;
+    videoUrl : Text
+  };
+actor {
+  stable announcements :
+    {
+      var blockIndex : Nat__490723111;
+      var blocks : [var [var ?Announcement__160704614]];
+      var elementIndex : Nat__490723111
+    };
+  stable bookmarks :
+    {
+      var blockIndex : Nat__490723111;
+      var blocks : [var [var ?Bookmark__499882045]];
+      var elementIndex : Nat__490723111
+    };
+  stable coupons :
+    {
+      var blockIndex : Nat__490723111;
+      var blocks : [var [var ?Coupon__243002030]];
+      var elementIndex : Nat__490723111
+    };
+  stable courses :
+    {
+      var blockIndex : Nat__490723111;
+      var blocks : [var [var ?Course__321233390]];
+      var elementIndex : Nat__490723111
+    };
+  stable enquiries :
+    {
+      var blockIndex : Nat__490723111;
+      var blocks : [var [var ?Enquiry__222490994]];
+      var elementIndex : Nat__490723111
+    };
+  stable enrollments :
+    {
+      var blockIndex : Nat__490723111;
+      var blocks : [var [var ?Enrollment__624009645]];
+      var elementIndex : Nat__490723111
+    };
+  stable feedbacks :
+    {
+      var blockIndex : Nat__490723111;
+      var blocks : [var [var ?Feedback__34322984]];
+      var elementIndex : Nat__490723111
+    };
+  stable galleryImages :
+    {
+      var blockIndex : Nat__490723111;
+      var blocks : [var [var ?GalleryImage__1001354798]];
+      var elementIndex : Nat__490723111
+    };
+  stable var nextAnnouncementId : Nat;
+  stable var nextBookmarkId : Nat;
+  stable var nextCouponId : Nat;
+  stable var nextCourseId : Nat;
+  stable var nextEnquiryId : Nat;
+  stable var nextEnrollmentId : Nat;
+  stable var nextFeedbackId : Nat;
+  stable var nextGalleryImageId : Nat;
+  stable var nextMaterialId : Nat;
+  stable var nextNotificationId : Nat;
+  stable var nextProductId : Nat;
+  stable var nextTeacherId : Nat;
+  stable var nextTestimonialId : Nat;
+  stable var nextVideoSeq : Nat;
+  stable notifications :
+    {
+      var blockIndex : Nat__490723111;
+      var blocks : [var [var ?Notification__264708741]];
+      var elementIndex : Nat__490723111
+    };
+  stable products :
+    {
+      var blockIndex : Nat__490723111;
+      var blocks : [var [var ?Product__750902660]];
+      var elementIndex : Nat__490723111
+    };
+  stable var siteSettings :
+    {
+      contactAddress : Text;
+      contactEmail : Text;
+      contactPhone : Text;
+      ctaText : Text;
+      heroSubtext : Text;
+      heroText : Text;
+      instagramUrl : Text;
+      linkedinUrl : Text;
+      telegramUrl : Text;
+      whatsappNumber : Text;
+      youtubeUrl : Text
+    };
+  stable studentProfiles :
+    {
+      var root : Node__46230540<Principal, StudentProfile__553316508>;
+      var size : Nat__490723111
+    };
+  stable studyMaterials :
+    {
+      var blockIndex : Nat__490723111;
+      var blocks : [var [var ?StudyMaterial__847768103]];
+      var elementIndex : Nat__490723111
+    };
+  stable teachers :
+    {
+      var blockIndex : Nat__490723111;
+      var blocks : [var [var ?Teacher__896081680]];
+      var elementIndex : Nat__490723111
+    };
+  stable testimonials :
+    {
+      var blockIndex : Nat__490723111;
+      var blocks : [var [var ?Testimonial__391666464]];
+      var elementIndex : Nat__490723111
+    };
+  stable videos :
+    {
+      var blockIndex : Nat__490723111;
+      var blocks : [var [var ?Video__1035008865]];
+      var elementIndex : Nat__490723111
+    }
+};
