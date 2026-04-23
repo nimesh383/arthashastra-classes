@@ -3,9 +3,17 @@ import { useInternetIdentity } from "@caffeineai/core-infrastructure";
 
 // ─── Role derivation ──────────────────────────────────────────────────────────
 const ADMIN_PRINCIPAL = import.meta.env.VITE_ADMIN_PRINCIPAL ?? "";
+const TEACHER_PRINCIPAL = import.meta.env.VITE_TEACHER_PRINCIPAL ?? "";
 
 export function deriveRole(principalText: string): UserRole {
   if (ADMIN_PRINCIPAL && principalText === ADMIN_PRINCIPAL) return "admin";
+  if (TEACHER_PRINCIPAL && principalText === TEACHER_PRINCIPAL)
+    return "teacher";
+  // Support comma-separated list of teacher principals
+  if (TEACHER_PRINCIPAL) {
+    const teachers = TEACHER_PRINCIPAL.split(",").map((p: string) => p.trim());
+    if (teachers.includes(principalText)) return "teacher";
+  }
   return "student";
 }
 
@@ -18,6 +26,12 @@ export function deriveRole(principalText: string): UserRole {
  * - logout()     → calls II clear(); callers should handle toast + navigation
  * - hasProfile   → pass the result of useStudentProfile() as the optional arg
  *                  to derive this flag (profile data lives in React Query)
+ *
+ * Roles:
+ * - admin   → principal matches VITE_ADMIN_PRINCIPAL
+ * - teacher → principal matches VITE_TEACHER_PRINCIPAL (comma-separated for multi-teacher)
+ * - student → any other authenticated user
+ * - guest   → unauthenticated
  *
  * Session hydrates automatically from II on mount (no manual persistence needed).
  */

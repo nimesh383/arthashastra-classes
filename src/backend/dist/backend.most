@@ -11,6 +11,7 @@ type Announcement__160704614 =
     message : Text;
     title : Text
   };
+type AttemptStatus__903152490 = {#in_progress; #submitted; #timed_out};
 type Bookmark__499882045 =
   {
     createdAt : Timestamp__301639476;
@@ -20,6 +21,23 @@ type Bookmark__499882045 =
     userId : Principal
   };
 type Category__8224233 = {#Book; #DigitalResource; #Merchandise; #Notes};
+type ChatMessage__132123030 = ChatMessage__270953422;
+type ChatMessage__270953422 =
+  {
+    content : Text;
+    id : Nat;
+    role : MessageRole__1030104659;
+    sessionId : Text;
+    timestamp : Timestamp__301639476
+  };
+type ChatSession__352415702 = ChatSession__564574972;
+type ChatSession__564574972 =
+  {
+    createdAt : Timestamp__301639476;
+    id : Text;
+    messageCount : Nat;
+    userId : Text
+  };
 type Coupon__243002030 =
   {
     code : Text;
@@ -50,7 +68,25 @@ type Course__321233390 =
   };
 type Data__791452850<K, V> =
   {var count : Nat__490723111; kvs : [var ?(K, V)]};
+type Difficulty__40882249 = {#Easy; #Hard; #Medium};
 type DiscountType__846355383 = {#flat; #percent};
+type DownloadCategory__629828245 =
+  {#admit_card; #certificate; #hall_ticket; #study_notes};
+type DownloadItem__464142636 = DownloadItem__856670246;
+type DownloadItem__856670246 =
+  {
+    batchYear : Text;
+    category : DownloadCategory__629828245;
+    createdAt : Timestamp__301639476;
+    description : Text;
+    downloadCount : Nat;
+    fileSize : Text;
+    fileUrl : Text;
+    id : Nat;
+    isPublic : Bool;
+    subject : Text;
+    title : Text
+  };
 type EnquiryStatus__663100040 = {#Contacted; #Pending};
 type Enquiry__222490994 = Enquiry__302813802;
 type Enquiry__302813802 =
@@ -76,6 +112,35 @@ type Enrollment__624009645 =
     status : EnrollmentStatus__93864562;
     studentId : Principal
   };
+type EventRegistration__646583452 = EventRegistration__710515565;
+type EventRegistration__710515565 =
+  {
+    email : Text;
+    eventId : Nat;
+    id : Nat;
+    name : Text;
+    phone : Text;
+    registeredAt : Timestamp__301639476;
+    studentId : Text
+  };
+type EventStatus__175643970 = {#cancelled; #completed; #ongoing; #upcoming};
+type Event__117699331 = Event__543096582;
+type Event__543096582 =
+  {
+    capacity : Nat;
+    createdAt : Timestamp__301639476;
+    description : Text;
+    endDate : Timestamp__301639476;
+    eventDate : Timestamp__301639476;
+    id : Nat;
+    imageUrl : Text;
+    isVisible : Bool;
+    registeredCount : Nat;
+    speaker : Text;
+    status : EventStatus__175643970;
+    title : Text;
+    topics : [Text]
+  };
 type Feedback__34322984 =
   {
     comment : Text;
@@ -97,6 +162,24 @@ type GalleryImage__1001354798 =
     isVisible : Bool;
     title : Text
   };
+type HttpHeader__727327821 = {name : Text; value : Text};
+type HttpRequest__365645888 =
+  {
+    body : ?Blob;
+    headers : [HttpHeader__727327821];
+    max_response_bytes : ?Nat64;
+    method : {#get; #head; #post};
+    transform :
+      ?{
+         context : Blob;
+         function :
+           shared query {context : Blob; response : HttpResponse__836418561} ->
+             async HttpResponse__836418561
+       };
+    url : Text
+  };
+type HttpResponse__836418561 =
+  {body : Blob; headers : [HttpHeader__727327821]; status : Nat};
 type Internal__8484328<K, V> =
   {children : [var ?Node__46230540<K, V>]; data : Data__791452850<K, V>};
 type ItemType__1061646159 = {#course; #material; #video};
@@ -104,6 +187,7 @@ type Leaf__809889148<K, V> = {data : Data__791452850<K, V>};
 type Level__648726349 =
   {#Advanced; #Beginner; #Class11; #Class12; #Dropper; #Intermediate};
 type MaterialType__11858968 = {#Notes; #PDF; #PYQ};
+type MessageRole__1030104659 = {#assistant; #user};
 type Nat__490723111 = Nat__920180692;
 type Nat__920180692 = Nat;
 type Node__46230540<K, V> =
@@ -131,6 +215,21 @@ type Product__750902660 =
     price : Float;
     title : Text
   };
+type QuestionType__788894805 = {#essay; #multiple_choice};
+type Question__705387906 =
+  {
+    correctAnswer : Text;
+    createdAt : Timestamp__301639476;
+    explanation : Text;
+    id : Nat;
+    options : [Text];
+    orderIndex : Nat;
+    points : Nat;
+    questionType : QuestionType__788894805;
+    testId : Nat;
+    text : Text
+  };
+type Question__836207852 = Question__705387906;
 type StudentProfile__553316508 =
   {
     completedTests : [Nat];
@@ -159,6 +258,7 @@ type StudyMaterial__847768103 =
 type Subject__1034835876 =
   {#Accountancy; #BST; #Commerce; #Economics; #Maths};
 type Subject__587511175 = {#Accountancy; #BST; #Commerce; #Economics; #Maths};
+type Subject__827681722 = {#Accountancy; #BST; #Commerce; #Economics; #Maths};
 type Teacher__896081680 =
   {
     email : Text;
@@ -168,6 +268,47 @@ type Teacher__896081680 =
     profilePhotoUrl : ?Text;
     specialization : Text
   };
+type TestAttemptAnswer__191773603 =
+  {
+    attemptId : Nat;
+    id : Nat;
+    isCorrect : Bool;
+    pointsAwarded : Nat;
+    questionId : Nat;
+    studentAnswer : Text
+  };
+type TestAttempt__1015554243 =
+  {
+    id : Nat;
+    startedAt : Timestamp__301639476;
+    status : AttemptStatus__903152490;
+    studentId : Text;
+    submittedAt : ?Timestamp__301639476;
+    testId : Nat
+  };
+type TestResult__625886600 =
+  {
+    attemptId : Nat;
+    createdAt : Timestamp__301639476;
+    grade : Text;
+    id : Nat;
+    maxPoints : Nat;
+    percentage : Float;
+    studentId : Text;
+    testId : Nat;
+    timeTaken : Int;
+    totalPoints : Nat
+  };
+type TestSeries__883561427 =
+  {
+    difficulty : Difficulty__40882249;
+    duration : Nat;
+    id : Nat;
+    subject : Subject__827681722;
+    title : Text;
+    totalQuestions : Nat
+  };
+type TestSeries__913609125 = TestSeries__883561427;
 type Testimonial__391666464 =
   {
     createdAt : Timestamp__301639476;
@@ -202,10 +343,28 @@ actor {
       var blocks : [var [var ?Announcement__160704614]];
       var elementIndex : Nat__490723111
     };
+  stable attemptAnswers :
+    {
+      var blockIndex : Nat__490723111;
+      var blocks : [var [var ?TestAttemptAnswer__191773603]];
+      var elementIndex : Nat__490723111
+    };
   stable bookmarks :
     {
       var blockIndex : Nat__490723111;
       var blocks : [var [var ?Bookmark__499882045]];
+      var elementIndex : Nat__490723111
+    };
+  stable chatMessages :
+    {
+      var blockIndex : Nat__490723111;
+      var blocks : [var [var ?ChatMessage__132123030]];
+      var elementIndex : Nat__490723111
+    };
+  stable chatSessions :
+    {
+      var blockIndex : Nat__490723111;
+      var blocks : [var [var ?ChatSession__352415702]];
       var elementIndex : Nat__490723111
     };
   stable coupons :
@@ -220,6 +379,12 @@ actor {
       var blocks : [var [var ?Course__321233390]];
       var elementIndex : Nat__490723111
     };
+  stable downloadItems :
+    {
+      var blockIndex : Nat__490723111;
+      var blocks : [var [var ?DownloadItem__464142636]];
+      var elementIndex : Nat__490723111
+    };
   stable enquiries :
     {
       var blockIndex : Nat__490723111;
@@ -230,6 +395,18 @@ actor {
     {
       var blockIndex : Nat__490723111;
       var blocks : [var [var ?Enrollment__624009645]];
+      var elementIndex : Nat__490723111
+    };
+  stable eventRegistrations :
+    {
+      var blockIndex : Nat__490723111;
+      var blocks : [var [var ?EventRegistration__646583452]];
+      var elementIndex : Nat__490723111
+    };
+  stable events :
+    {
+      var blockIndex : Nat__490723111;
+      var blocks : [var [var ?Event__117699331]];
       var elementIndex : Nat__490723111
     };
   stable feedbacks :
@@ -244,17 +421,35 @@ actor {
       var blocks : [var [var ?GalleryImage__1001354798]];
       var elementIndex : Nat__490723111
     };
+  stable ic :
+    actor {
+      http_request :
+        shared HttpRequest__365645888 -> async HttpResponse__836418561
+    };
+  stable legacyTestAttempts :
+    {
+      var root : Node__46230540<(Principal, Nat), Nat>;
+      var size : Nat__490723111
+    };
   stable var nextAnnouncementId : Nat;
+  stable var nextAttemptAnswerId : Nat;
+  stable var nextAttemptId : Nat;
   stable var nextBookmarkId : Nat;
+  stable var nextChatMessageId : Nat;
   stable var nextCouponId : Nat;
   stable var nextCourseId : Nat;
+  stable var nextDownloadId : Nat;
   stable var nextEnquiryId : Nat;
   stable var nextEnrollmentId : Nat;
+  stable var nextEventId : Nat;
   stable var nextFeedbackId : Nat;
   stable var nextGalleryImageId : Nat;
   stable var nextMaterialId : Nat;
   stable var nextNotificationId : Nat;
   stable var nextProductId : Nat;
+  stable var nextQuestionId : Nat;
+  stable var nextRegistrationId : Nat;
+  stable var nextResultId : Nat;
   stable var nextTeacherId : Nat;
   stable var nextTestimonialId : Nat;
   stable var nextVideoSeq : Nat;
@@ -268,6 +463,12 @@ actor {
     {
       var blockIndex : Nat__490723111;
       var blocks : [var [var ?Product__750902660]];
+      var elementIndex : Nat__490723111
+    };
+  stable questions :
+    {
+      var blockIndex : Nat__490723111;
+      var blocks : [var [var ?Question__836207852]];
       var elementIndex : Nat__490723111
     };
   stable var siteSettings :
@@ -301,10 +502,28 @@ actor {
       var blocks : [var [var ?Teacher__896081680]];
       var elementIndex : Nat__490723111
     };
+  stable testAttempts :
+    {
+      var blockIndex : Nat__490723111;
+      var blocks : [var [var ?TestAttempt__1015554243]];
+      var elementIndex : Nat__490723111
+    };
+  stable testResults :
+    {
+      var blockIndex : Nat__490723111;
+      var blocks : [var [var ?TestResult__625886600]];
+      var elementIndex : Nat__490723111
+    };
   stable testimonials :
     {
       var blockIndex : Nat__490723111;
       var blocks : [var [var ?Testimonial__391666464]];
+      var elementIndex : Nat__490723111
+    };
+  stable tests :
+    {
+      var blockIndex : Nat__490723111;
+      var blocks : [var [var ?TestSeries__913609125]];
       var elementIndex : Nat__490723111
     };
   stable videos :

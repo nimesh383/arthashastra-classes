@@ -446,13 +446,23 @@ export default function TestsPage() {
                       </span>
                     </div>
                     <div className="pt-3 border-t border-white/10">
-                      <RippleButton
-                        className="w-full px-4 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500/20 to-violet-600/20 border border-cyan-500/30 text-cyan-400 font-semibold text-sm hover:from-cyan-500 hover:to-violet-600 hover:text-white hover:border-transparent transition-smooth flex items-center justify-center gap-2"
-                        onClick={() => handleStartTest(t)}
-                        data-ocid={`tests.start.button.${i + 1}`}
-                      >
-                        Start Test →
-                      </RippleButton>
+                      {isAuthenticated ? (
+                        <RippleButton
+                          className="w-full px-4 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500/20 to-violet-600/20 border border-cyan-500/30 text-cyan-400 font-semibold text-sm hover:from-cyan-500 hover:to-violet-600 hover:text-white hover:border-transparent transition-smooth flex items-center justify-center gap-2"
+                          onClick={() => handleStartTest(t)}
+                          data-ocid={`tests.start.button.${i + 1}`}
+                        >
+                          Start Test →
+                        </RippleButton>
+                      ) : (
+                        <a
+                          href="/login"
+                          className="w-full px-4 py-2.5 rounded-xl glass-morphism border border-white/10 text-muted-foreground font-semibold text-sm hover:border-cyan-500/40 hover:text-cyan-400 transition-smooth flex items-center justify-center gap-2"
+                          data-ocid={`tests.login.button.${i + 1}`}
+                        >
+                          Login to Take Test →
+                        </a>
+                      )}
                     </div>
                   </GlowCard>
                 </AnimatedSection>

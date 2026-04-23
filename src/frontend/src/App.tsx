@@ -1,3 +1,6 @@
+import AIChatbot from "@/components/AIChatbot";
+import AnnouncementTicker from "@/components/AnnouncementTicker";
+import MobileBottomNav from "@/components/MobileBottomNav";
 import AdminLayout from "@/components/layout/AdminLayout";
 import Footer from "@/components/layout/Footer";
 import Navbar from "@/components/layout/Navbar";
@@ -44,6 +47,16 @@ const TermsPage = lazy(() => import("@/pages/Terms"));
 const RefundPolicyPage = lazy(() => import("@/pages/RefundPolicy"));
 const SuccessStoriesPage = lazy(() => import("@/pages/SuccessStories"));
 
+// ─── Lazy-loaded new pages ─────────────────────────────────────────────────────
+const TestAttemptPage = lazy(() => import("@/pages/TestAttempt"));
+const TestResultPage = lazy(() => import("@/pages/TestResult"));
+const TeacherDashboardPage = lazy(() => import("@/pages/TeacherDashboard"));
+const CheckoutPage = lazy(() => import("@/pages/Checkout"));
+const PaymentSuccessPage = lazy(() => import("@/pages/PaymentSuccess"));
+const DownloadsPage = lazy(() => import("@/pages/Downloads"));
+const EventsPage = lazy(() => import("@/pages/Events"));
+const EventDetailPage = lazy(() => import("@/pages/EventDetail"));
+
 // ─── Lazy-loaded admin pages ───────────────────────────────────────────────────
 const AdminOverviewPage = lazy(() => import("@/pages/admin/AdminOverview"));
 const AdminCoursesPage = lazy(() => import("@/pages/admin/AdminCourses"));
@@ -77,6 +90,7 @@ function PublicLayout() {
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col dark">
       <CustomCursor />
+      <AnnouncementTicker />
       <Navbar />
       <main className="flex-1">
         <PageTransition routeKey={pathname}>
@@ -86,12 +100,14 @@ function PublicLayout() {
         </PageTransition>
       </main>
       <Footer />
+      <MobileBottomNav />
       {/* Global floating elements */}
       <WhatsAppButton />
       <BackToTop />
       <CookieBanner />
       <ExitIntentPopup />
       <MobileCTABar />
+      <AIChatbot />
       <Toaster
         theme="dark"
         position="bottom-right"
@@ -260,6 +276,48 @@ const successStoriesRoute = createRoute({
   component: SuccessStoriesPage,
 });
 
+// ─── New public pages ─────────────────────────────────────────────────────────
+const testAttemptRoute = createRoute({
+  getParentRoute: () => publicLayoutRoute,
+  path: "/tests/$testId",
+  component: TestAttemptPage,
+});
+const testResultRoute = createRoute({
+  getParentRoute: () => publicLayoutRoute,
+  path: "/test-result/$attemptId",
+  component: TestResultPage,
+});
+const teacherDashboardRoute = createRoute({
+  getParentRoute: () => publicLayoutRoute,
+  path: "/teacher-dashboard",
+  component: TeacherDashboardPage,
+});
+const checkoutRoute = createRoute({
+  getParentRoute: () => publicLayoutRoute,
+  path: "/checkout",
+  component: CheckoutPage,
+});
+const paymentSuccessRoute = createRoute({
+  getParentRoute: () => publicLayoutRoute,
+  path: "/payment-success",
+  component: PaymentSuccessPage,
+});
+const downloadsRoute = createRoute({
+  getParentRoute: () => publicLayoutRoute,
+  path: "/downloads",
+  component: DownloadsPage,
+});
+const eventsRoute = createRoute({
+  getParentRoute: () => publicLayoutRoute,
+  path: "/events",
+  component: EventsPage,
+});
+const eventDetailRoute = createRoute({
+  getParentRoute: () => publicLayoutRoute,
+  path: "/events/$eventId",
+  component: EventDetailPage,
+});
+
 const notFoundRoute = createRoute({
   getParentRoute: () => publicLayoutRoute,
   path: "*",
@@ -353,6 +411,14 @@ const routeTree = rootRoute.addChildren([
     termsRoute,
     refundPolicyRoute,
     successStoriesRoute,
+    testAttemptRoute,
+    testResultRoute,
+    teacherDashboardRoute,
+    checkoutRoute,
+    paymentSuccessRoute,
+    downloadsRoute,
+    eventsRoute,
+    eventDetailRoute,
     notFoundRoute,
   ]),
   adminLayoutRoute.addChildren([

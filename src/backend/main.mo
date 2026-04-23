@@ -16,6 +16,10 @@ import GalleryTypes "types/gallery";
 import FeedbackTypes "types/feedback";
 import BookmarkTypes "types/bookmarks";
 import NotificationTypes "types/notifications";
+import TestTypes "types/tests";
+import EventTypes "types/events";
+import DownloadTypes "types/downloads";
+import AiChatTypes "types/aichat";
 import EnquiriesLib "lib/enquiries";
 import CoursesLib "lib/courses";
 import MaterialsLib "lib/materials";
@@ -23,6 +27,11 @@ import ProductsLib "lib/products";
 import VideosLib "lib/videos";
 import TestimonialsLib "lib/testimonials";
 import AnnouncementsLib "lib/announcements";
+import TestsLib "lib/tests";
+import QuestionsLib "lib/questions";
+import EventsLib "lib/events";
+import DownloadsLib "lib/downloads";
+import AiChatLib "lib/aichat";
 import CoursesApi "mixins/courses-api";
 import MaterialsApi "mixins/materials-api";
 import TeachersApi "mixins/teachers-api";
@@ -39,10 +48,16 @@ import GalleryApi "mixins/gallery-api";
 import FeedbackApi "mixins/feedback-api";
 import BookmarksApi "mixins/bookmarks-api";
 import NotificationsApi "mixins/notifications-api";
+import QuestionsApi "mixins/questions-api";
+import TestAttemptsApi "mixins/testAttempts-api";
+import EventsApi "mixins/events-api";
+import DownloadsApi "mixins/downloads-api";
+import AiChatApi "mixins/aichat-api";
 
 
 
 actor {
+  // ── Existing state ────────────────────────────────────────────────────────
   let courses = List.empty<CourseTypes.Course>();
   let studyMaterials = List.empty<MaterialTypes.StudyMaterial>();
   let teachers = List.empty<TeacherTypes.Teacher>();
@@ -59,7 +74,28 @@ actor {
   let bookmarks = List.empty<BookmarkTypes.Bookmark>();
   let notifications = List.empty<NotificationTypes.Notification>();
 
-  // Seed sample data once at deploy time
+  // ── Test series (legacy) ──────────────────────────────────────────────────
+  let tests = List.empty<TestsLib.TestSeries>();
+  let legacyTestAttempts = Map.empty<(Principal, Nat), Nat>();
+
+  // ── New test system state ─────────────────────────────────────────────────
+  let questions = List.empty<QuestionsLib.Question>();
+  let testAttempts = List.empty<TestTypes.TestAttempt>();
+  let attemptAnswers = List.empty<TestTypes.TestAttemptAnswer>();
+  let testResults = List.empty<TestTypes.TestResult>();
+
+  // ── Events state ──────────────────────────────────────────────────────────
+  let events = List.empty<EventsLib.Event>();
+  let eventRegistrations = List.empty<EventsLib.EventRegistration>();
+
+  // ── Downloads state ───────────────────────────────────────────────────────
+  let downloadItems = List.empty<DownloadsLib.DownloadItem>();
+
+  // ── AI Chat state ─────────────────────────────────────────────────────────
+  let chatMessages = List.empty<AiChatLib.ChatMessage>();
+  let chatSessions = List.empty<AiChatLib.ChatSession>();
+
+  // ── Seed sample data once at deploy time ──────────────────────────────────
   do {
     CoursesLib.seedCourses(courses);
     MaterialsLib.seedMaterials(studyMaterials, Time.now());
@@ -67,8 +103,13 @@ actor {
     VideosLib.seedVideos(videos, Principal.fromText("aaaaa-aa"), Time.now());
     TestimonialsLib.seedTestimonials(testimonials, Time.now());
     AnnouncementsLib.seedAnnouncements(announcements, Time.now());
+    TestsLib.seedTests(tests);
+    QuestionsLib.seedQuestions(questions);
+    EventsLib.seedEvents(events);
+    DownloadsLib.seedDownloadItems(downloadItems);
   };
 
+  // ── Existing mixins ───────────────────────────────────────────────────────
   include CoursesApi(courses);
   include MaterialsApi(studyMaterials, enrollments);
   include TeachersApi(teachers);
@@ -85,4 +126,11 @@ actor {
   include FeedbackApi(feedbacks, enrollments);
   include BookmarksApi(bookmarks);
   include NotificationsApi(notifications, studentProfiles);
+
+  // ── New domain mixins ─────────────────────────────────────────────────────
+  include QuestionsApi(questions);
+  include TestAttemptsApi(questions, testAttempts, attemptAnswers, testResults);
+  include EventsApi(events, eventRegistrations);
+  include DownloadsApi(downloadItems);
+  include AiChatApi(chatMessages, chatSessions);
 };

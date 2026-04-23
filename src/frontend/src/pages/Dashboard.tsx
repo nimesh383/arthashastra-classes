@@ -12,11 +12,18 @@ import {
   useMyEnrollments,
   useMyMaterials,
   useMyNotifications,
+  useMyResults,
   useMyVideosForCourse,
   useStudentProfile,
 } from "@/hooks/useBackend";
 import { useAuth } from "@/store/authStore";
-import type { Course, Enrollment, Notification, StudyMaterial } from "@/types";
+import type {
+  Course,
+  Enrollment,
+  Notification,
+  StudyMaterial,
+  TestResult,
+} from "@/types";
 import { EnrollmentStatus, FileType, NotificationType } from "@/types";
 import { useActor } from "@caffeineai/core-infrastructure";
 import { useQueryClient } from "@tanstack/react-query";
@@ -34,11 +41,12 @@ import {
   FileText,
   ImageIcon,
   Info,
-  Lock,
+  Lightbulb,
   LogOut,
   Megaphone,
   Pencil,
   Play,
+  Trophy,
   User,
   Video as VideoIcon,
   X,
@@ -211,7 +219,6 @@ function MaterialItem({ material, index }: MaterialItemProps) {
       onContextMenu={(e) => e.preventDefault()}
       data-ocid={`dashboard.material.item.${index + 1}`}
     >
-      {/* Image preview with watermark */}
       {isImage ? (
         <div className="relative w-12 h-12 rounded-lg overflow-hidden shrink-0 select-none">
           <img
@@ -220,7 +227,6 @@ function MaterialItem({ material, index }: MaterialItemProps) {
             className="w-full h-full object-cover pointer-events-none select-none"
             draggable={false}
           />
-          {/* Watermark overlay */}
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none">
             <span
               className="text-[5px] font-black text-foreground rotate-[-30deg] tracking-widest uppercase"
@@ -321,6 +327,26 @@ function CourseCard({ enrollment, course, index }: CourseCardProps) {
         {course.description}
       </p>
 
+      {/* Progress bar */}
+      <div className="mb-3">
+        <div className="flex items-center justify-between mb-1">
+          <span className="text-[10px] text-muted-foreground uppercase tracking-wide">
+            Progress
+          </span>
+          <span className="text-[10px] font-bold text-cyan-400">
+            {isCompleted ? "100%" : "68%"}
+          </span>
+        </div>
+        <div className="h-1.5 rounded-full bg-white/10 overflow-hidden">
+          <motion.div
+            className="h-full rounded-full bg-gradient-to-r from-cyan-400 to-violet-500"
+            initial={{ width: "0%" }}
+            animate={{ width: isCompleted ? "100%" : "68%" }}
+            transition={{ duration: 1.2, ease: "easeOut", delay: index * 0.1 }}
+          />
+        </div>
+      </div>
+
       <div className="flex items-center gap-2 pt-3 border-t border-white/10">
         <Link
           to="/study-materials"
@@ -357,7 +383,6 @@ function TutorialVideoCard({ video, index, onPlay }: TutorialVideoCardProps) {
       className="group text-left glass-morphism rounded-xl border border-white/10 overflow-hidden hover:border-cyan-500/30 transition-smooth"
       data-ocid={`dashboard.tutorials.item.${index + 1}`}
     >
-      {/* Thumbnail */}
       <div className="relative w-full aspect-video bg-black overflow-hidden">
         {video.thumbnailUrl ? (
           <img
@@ -371,13 +396,11 @@ function TutorialVideoCard({ video, index, onPlay }: TutorialVideoCardProps) {
             <VideoIcon className="w-8 h-8 text-muted-foreground/40" />
           </div>
         )}
-        {/* Play overlay */}
         <div className="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-black/40 transition-smooth">
           <div className="w-10 h-10 rounded-full bg-cyan-500/80 group-hover:bg-cyan-500 flex items-center justify-center shadow-glow transition-smooth">
             <Play className="w-5 h-5 text-white fill-white ml-0.5" />
           </div>
         </div>
-        {/* Preview badge */}
         {video.isPreview && (
           <span className="absolute top-2 left-2 text-[10px] font-bold px-2 py-0.5 rounded-full bg-cyan-500/80 text-white uppercase tracking-wide">
             Free Preview
@@ -450,7 +473,6 @@ function CourseTutorialRow({ courseId, courseTitle }: CourseTutorialRowProps) {
       <p className="text-xs text-muted-foreground uppercase tracking-widest mb-2 font-semibold">
         {courseTitle}
       </p>
-      {/* Video player modal */}
       {activeVideo && (
         <motion.div
           initial={{ opacity: 0, scale: 0.97 }}
@@ -490,6 +512,463 @@ function CourseTutorialRow({ courseId, courseTitle }: CourseTutorialRowProps) {
   );
 }
 
+// ─── Attendance Ring ──────────────────────────────────────────────────────────
+function AttendanceRing({ percentage = 78 }: { percentage?: number }) {
+  const radius = 52;
+  const circumference = 2 * Math.PI * radius;
+  const progress = (percentage / 100) * circumference;
+
+  return (
+    <GlowCard
+      glowColor="cyan"
+      className="p-5"
+      data-ocid="dashboard.attendance.card"
+    >
+      <p className="text-xs text-muted-foreground uppercase tracking-widest mb-4 font-semibold">
+        Attendance
+      </p>
+      <div className="flex items-center gap-5">
+        <div className="relative shrink-0">
+          <svg
+            width="128"
+            height="128"
+            viewBox="0 0 128 128"
+            className="-rotate-90"
+            role="img"
+            aria-hidden="true"
+          >
+            <circle
+              cx="64"
+              cy="64"
+              r={radius}
+              strokeWidth="10"
+              stroke="oklch(0.68 0.24 200 / 0.12)"
+              fill="none"
+            />
+            <motion.circle
+              cx="64"
+              cy="64"
+              r={radius}
+              strokeWidth="10"
+              fill="none"
+              stroke="url(#attendanceGrad)"
+              strokeLinecap="round"
+              strokeDasharray={circumference}
+              initial={{ strokeDashoffset: circumference }}
+              animate={{ strokeDashoffset: circumference - progress }}
+              transition={{ duration: 1.5, ease: "easeOut", delay: 0.3 }}
+            />
+            <defs>
+              <linearGradient
+                id="attendanceGrad"
+                x1="0%"
+                y1="0%"
+                x2="100%"
+                y2="0%"
+              >
+                <stop offset="0%" stopColor="oklch(0.68 0.24 200)" />
+                <stop offset="100%" stopColor="oklch(0.55 0.2 270)" />
+              </linearGradient>
+            </defs>
+          </svg>
+          <div className="absolute inset-0 flex flex-col items-center justify-center">
+            <span className="font-display text-2xl font-extrabold gradient-text-cyan-violet">
+              {percentage}%
+            </span>
+            <span className="text-[10px] text-muted-foreground uppercase tracking-wide">
+              Present
+            </span>
+          </div>
+        </div>
+        <div className="flex flex-col gap-2 flex-1">
+          {[
+            { label: "Classes Attended", value: "47", color: "text-cyan-400" },
+            {
+              label: "Total Classes",
+              value: "60",
+              color: "text-muted-foreground",
+            },
+            { label: "This Month", value: "12/15", color: "text-violet-400" },
+          ].map((item) => (
+            <div key={item.label} className="flex items-center justify-between">
+              <span className="text-[11px] text-muted-foreground">
+                {item.label}
+              </span>
+              <span className={`text-xs font-bold ${item.color}`}>
+                {item.value}
+              </span>
+            </div>
+          ))}
+          <div className="mt-1 pt-2 border-t border-white/10">
+            <span
+              className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${percentage >= 75 ? "bg-teal-500/10 text-teal-400 border border-teal-500/20" : "bg-amber-500/10 text-amber-400 border border-amber-500/20"}`}
+            >
+              {percentage >= 75 ? "✓ Eligible" : "⚠ Low Attendance"}
+            </span>
+          </div>
+        </div>
+      </div>
+    </GlowCard>
+  );
+}
+
+// ─── Daily Study Tracker ──────────────────────────────────────────────────────
+const STUDY_DAYS = [
+  { day: "Mon", hours: 2.5 },
+  { day: "Tue", hours: 3.0 },
+  { day: "Wed", hours: 1.5 },
+  { day: "Thu", hours: 4.0 },
+  { day: "Fri", hours: 2.0 },
+  { day: "Sat", hours: 3.5 },
+  { day: "Sun", hours: 1.0 },
+];
+const MAX_HOURS = 4;
+
+function DailyStudyTracker() {
+  return (
+    <GlowCard
+      glowColor="violet"
+      className="p-5"
+      data-ocid="dashboard.study_tracker.card"
+    >
+      <div className="flex items-center justify-between mb-4">
+        <div>
+          <p className="text-xs text-muted-foreground uppercase tracking-widest font-semibold">
+            Daily Study Tracker
+          </p>
+          <p className="text-[10px] text-muted-foreground mt-0.5">
+            Track your daily progress
+          </p>
+        </div>
+        <span className="text-[10px] px-2 py-0.5 rounded-full bg-violet-500/10 text-violet-400 border border-violet-500/20 font-semibold">
+          Coming Soon
+        </span>
+      </div>
+      <div className="flex items-end gap-1.5 h-24">
+        {STUDY_DAYS.map((d, i) => {
+          const heightPct = (d.hours / MAX_HOURS) * 100;
+          return (
+            <div
+              key={d.day}
+              className="flex-1 flex flex-col items-center gap-1"
+            >
+              <div
+                className="w-full rounded-t-lg overflow-hidden bg-white/5 flex items-end"
+                style={{ height: "80px" }}
+              >
+                <motion.div
+                  className="w-full rounded-t-lg"
+                  style={{
+                    background:
+                      "linear-gradient(to top, oklch(0.68 0.24 200), oklch(0.55 0.2 270))",
+                  }}
+                  initial={{ height: "0%" }}
+                  animate={{ height: `${heightPct}%` }}
+                  transition={{
+                    duration: 0.8,
+                    delay: i * 0.1,
+                    ease: "easeOut",
+                  }}
+                />
+              </div>
+              <span className="text-[9px] text-muted-foreground font-medium">
+                {d.day}
+              </span>
+            </div>
+          );
+        })}
+      </div>
+      <div className="mt-2 flex items-center justify-between">
+        <span className="text-[10px] text-muted-foreground">
+          Avg: <span className="text-cyan-400 font-semibold">2.5h/day</span>
+        </span>
+        <span className="text-[10px] text-muted-foreground">
+          Goal: <span className="text-violet-400 font-semibold">4h/day</span>
+        </span>
+      </div>
+    </GlowCard>
+  );
+}
+
+// ─── AI Recommendations ───────────────────────────────────────────────────────
+const AI_RECS = [
+  {
+    topic: "Financial Statement Analysis",
+    subject: "Accountancy",
+    reason: "Based on enrolled course",
+  },
+  {
+    topic: "Demand & Supply Elasticity",
+    subject: "Economics",
+    reason: "Trending in your batch",
+  },
+  {
+    topic: "Partnership Accounts",
+    subject: "Accountancy",
+    reason: "Upcoming in curriculum",
+  },
+  {
+    topic: "Business Environment",
+    subject: "BST",
+    reason: "Recommended by faculty",
+  },
+];
+
+function AIRecommendations() {
+  return (
+    <GlowCard
+      glowColor="magenta"
+      className="p-5"
+      data-ocid="dashboard.ai_recommendations.card"
+    >
+      <div className="flex items-center gap-2 mb-4">
+        <div className="w-8 h-8 rounded-lg bg-fuchsia-500/15 flex items-center justify-center shrink-0">
+          <Lightbulb className="w-4 h-4 text-fuchsia-400" />
+        </div>
+        <div>
+          <p className="text-sm font-bold text-foreground">
+            AI Study Recommendations
+          </p>
+          <p className="text-[10px] text-muted-foreground">
+            Personalised for you
+          </p>
+        </div>
+      </div>
+      <div className="flex flex-col gap-2 mb-3">
+        {AI_RECS.map((rec, i) => (
+          <motion.div
+            key={rec.topic}
+            initial={{ opacity: 0, x: -10 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: i * 0.08 }}
+            className="flex items-start gap-3 p-2.5 rounded-lg bg-white/5 border border-white/5 hover:border-fuchsia-500/20 transition-smooth"
+            data-ocid={`dashboard.ai_rec.item.${i + 1}`}
+          >
+            <div className="w-1.5 h-1.5 rounded-full bg-gradient-to-br from-cyan-400 to-violet-500 mt-1.5 shrink-0" />
+            <div className="flex-1 min-w-0">
+              <p className="text-xs font-semibold text-foreground truncate">
+                {rec.topic}
+              </p>
+              <p className="text-[10px] text-muted-foreground">
+                {rec.subject} · {rec.reason}
+              </p>
+            </div>
+          </motion.div>
+        ))}
+      </div>
+      <Link
+        to="/study-materials"
+        className="flex items-center justify-center gap-1.5 w-full py-2 rounded-lg bg-fuchsia-500/10 border border-fuchsia-500/20 text-fuchsia-400 font-semibold text-xs hover:bg-fuchsia-500/20 transition-smooth"
+        data-ocid="dashboard.ai_rec.view_all.link"
+      >
+        View All Recommendations <ChevronRight className="w-3 h-3" />
+      </Link>
+    </GlowCard>
+  );
+}
+
+// ─── Leaderboard Widget ───────────────────────────────────────────────────────
+const MOCK_LEADERS = [
+  { rank: 1, name: "Priya Sharma", score: 94, color: "text-amber-400" },
+  { rank: 2, name: "Rohit Verma", score: 91, color: "text-slate-300" },
+  { rank: 3, name: "Ananya Singh", score: 88, color: "text-amber-600" },
+  { rank: 4, name: "Karan Patel", score: 85, color: "text-muted-foreground" },
+  { rank: 5, name: "Shreya Joshi", score: 82, color: "text-muted-foreground" },
+];
+
+function LeaderboardWidget() {
+  return (
+    <GlowCard
+      glowColor="cyan"
+      className="p-5"
+      data-ocid="dashboard.leaderboard.card"
+    >
+      <div className="flex items-center gap-2 mb-4">
+        <Trophy className="w-4 h-4 text-cyan-400" />
+        <p className="font-bold text-foreground text-sm">Class Leaderboard</p>
+      </div>
+      <div className="flex flex-col gap-1.5">
+        {MOCK_LEADERS.map((leader, i) => (
+          <motion.div
+            key={leader.name}
+            initial={{ opacity: 0, x: -10 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: i * 0.07 }}
+            className="flex items-center gap-3 py-2 px-2.5 rounded-lg bg-white/5 border border-white/5"
+            data-ocid={`dashboard.leaderboard.item.${i + 1}`}
+          >
+            <span
+              className={`text-sm font-extrabold w-5 text-center ${leader.color}`}
+            >
+              {leader.rank}
+            </span>
+            <div className="flex-1 min-w-0">
+              <p className="text-xs font-semibold text-foreground truncate">
+                {leader.name}
+              </p>
+            </div>
+            <div className="flex items-center gap-1.5 shrink-0">
+              <div className="h-1.5 w-16 rounded-full bg-white/10 overflow-hidden">
+                <motion.div
+                  className="h-full rounded-full bg-gradient-to-r from-cyan-400 to-violet-500"
+                  initial={{ width: "0%" }}
+                  animate={{ width: `${leader.score}%` }}
+                  transition={{ duration: 1, delay: i * 0.1 + 0.3 }}
+                />
+              </div>
+              <span className="text-xs font-bold text-cyan-400 w-8 text-right">
+                {leader.score}%
+              </span>
+            </div>
+          </motion.div>
+        ))}
+      </div>
+      <p className="text-[10px] text-muted-foreground text-center mt-3">
+        Based on recent test performance
+      </p>
+    </GlowCard>
+  );
+}
+
+// ─── Test Results Summary ─────────────────────────────────────────────────────
+function getGradeColor(grade: string): string {
+  if (grade.startsWith("A"))
+    return "text-teal-400 bg-teal-500/10 border-teal-500/20";
+  if (grade.startsWith("B"))
+    return "text-cyan-400 bg-cyan-500/10 border-cyan-500/20";
+  if (grade.startsWith("C"))
+    return "text-violet-400 bg-violet-500/10 border-violet-500/20";
+  return "text-fuchsia-400 bg-fuchsia-500/10 border-fuchsia-500/20";
+}
+
+function TestResultsSummary({ results }: { results: TestResult[] }) {
+  const recent = results.slice(0, 3);
+
+  return (
+    <GlowCard
+      glowColor="violet"
+      className="p-5"
+      data-ocid="dashboard.test_results.card"
+    >
+      <div className="flex items-center gap-2 mb-4">
+        <Award className="w-4 h-4 text-violet-400" />
+        <p className="font-bold text-foreground text-sm">Recent Test Results</p>
+      </div>
+      {recent.length === 0 ? (
+        <div
+          className="text-center py-4"
+          data-ocid="dashboard.test_results.empty_state"
+        >
+          <Award className="w-8 h-8 text-muted-foreground mx-auto mb-2 opacity-30" />
+          <p className="text-xs text-muted-foreground">No tests taken yet</p>
+          <Link
+            to="/tests"
+            className="text-xs text-cyan-400 hover:text-cyan-300 transition-smooth mt-1 inline-block"
+            data-ocid="dashboard.test_results.browse.link"
+          >
+            Browse Tests →
+          </Link>
+        </div>
+      ) : (
+        <div className="flex flex-col gap-2">
+          {recent.map((r, i) => (
+            <div
+              key={r.id.toString()}
+              className="flex items-center justify-between p-2.5 rounded-lg bg-white/5 border border-white/5"
+              data-ocid={`dashboard.test_results.item.${i + 1}`}
+            >
+              <div className="flex-1 min-w-0">
+                <p className="text-xs font-semibold text-foreground truncate">
+                  Test #{r.testId.toString()}
+                </p>
+                <p className="text-[10px] text-muted-foreground">
+                  {formatDate(r.createdAt)}
+                </p>
+              </div>
+              <div className="flex items-center gap-2 shrink-0">
+                <span className="text-xs font-bold text-cyan-400">
+                  {r.percentage.toFixed(0)}%
+                </span>
+                <span
+                  className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${getGradeColor(r.grade)}`}
+                >
+                  {r.grade}
+                </span>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+      <Link
+        to="/tests"
+        className="flex items-center justify-center gap-1.5 w-full py-2 rounded-lg mt-3 bg-violet-500/10 border border-violet-500/20 text-violet-400 font-semibold text-xs hover:bg-violet-500/20 transition-smooth"
+        data-ocid="dashboard.test_results.view_all.link"
+      >
+        View All Tests <ChevronRight className="w-3 h-3" />
+      </Link>
+    </GlowCard>
+  );
+}
+
+// ─── Payment History ─────────────────────────────────────────────────────────
+function PaymentHistoryPanel({ enrollments }: { enrollments: Enrollment[] }) {
+  const paid = enrollments.filter(
+    (e) =>
+      e.status !== EnrollmentStatus.Pending &&
+      e.status !== EnrollmentStatus.Refunded,
+  );
+
+  return (
+    <GlowCard
+      glowColor="cyan"
+      className="p-5"
+      data-ocid="dashboard.payment_history.card"
+    >
+      <div className="flex items-center gap-2 mb-4">
+        <CreditCard className="w-4 h-4 text-cyan-400" />
+        <p className="font-bold text-foreground text-sm">Payment History</p>
+      </div>
+      {paid.length === 0 ? (
+        <div
+          className="text-center py-4"
+          data-ocid="dashboard.payment_history.empty_state"
+        >
+          <CreditCard className="w-8 h-8 text-muted-foreground mx-auto mb-2 opacity-30" />
+          <p className="text-xs text-muted-foreground">No payments yet</p>
+        </div>
+      ) : (
+        <div className="flex flex-col gap-2">
+          {paid.slice(0, 4).map((e, i) => (
+            <div
+              key={e.id.toString()}
+              className="flex items-center justify-between p-2.5 rounded-lg bg-white/5 border border-white/5"
+              data-ocid={`dashboard.payment_history.item.${i + 1}`}
+            >
+              <div className="flex-1 min-w-0">
+                <p className="text-xs font-semibold text-foreground">
+                  Course #{e.courseId.toString()}
+                </p>
+                <p className="text-[10px] text-muted-foreground">
+                  {formatDate(e.purchasedAt)} ·{" "}
+                  {e.paymentId ? `ID: ${e.paymentId.slice(0, 8)}…` : ""}
+                </p>
+              </div>
+              <div className="flex items-center gap-2 shrink-0">
+                <span className="text-xs font-bold text-teal-400">
+                  {(Number(e.amountPaid) / 1e8).toFixed(2)} ICP
+                </span>
+                <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-teal-500/10 border border-teal-500/20 text-teal-400 font-semibold">
+                  Paid
+                </span>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </GlowCard>
+  );
+}
+
 // ─── Notification helpers ─────────────────────────────────────────────────────
 
 function NotificationIcon({ type }: { type: NotificationType }) {
@@ -502,6 +981,31 @@ function NotificationIcon({ type }: { type: NotificationType }) {
       return <Megaphone className="w-4 h-4 text-fuchsia-400" />;
     default:
       return <Info className="w-4 h-4 text-muted-foreground" />;
+  }
+}
+
+function getNotificationBadge(type: NotificationType) {
+  switch (type) {
+    case NotificationType.enrollment:
+      return {
+        label: "Enrollment",
+        cls: "bg-cyan-500/10 text-cyan-400 border-cyan-500/20",
+      };
+    case NotificationType.payment:
+      return {
+        label: "Payment",
+        cls: "bg-violet-500/10 text-violet-400 border-violet-500/20",
+      };
+    case NotificationType.announcement:
+      return {
+        label: "Announcement",
+        cls: "bg-fuchsia-500/10 text-fuchsia-400 border-fuchsia-500/20",
+      };
+    default:
+      return {
+        label: "General",
+        cls: "bg-white/5 text-muted-foreground border-white/10",
+      };
   }
 }
 
@@ -519,6 +1023,16 @@ function NotificationCenter({
   isMarkingAll,
 }: NotificationCenterProps) {
   const unreadCount = notifications.filter((n) => !n.isRead).length;
+
+  // Group by type
+  const grouped = notifications
+    .slice(0, 8)
+    .reduce<Record<string, Notification[]>>((acc, n) => {
+      const key = n.notificationType as string;
+      if (!acc[key]) acc[key] = [];
+      acc[key].push(n);
+      return acc;
+    }, {});
 
   return (
     <AnimatedSection delay={0.08}>
@@ -558,39 +1072,54 @@ function NotificationCenter({
         </div>
       ) : (
         <div
-          className="flex flex-col gap-2"
+          className="flex flex-col gap-3"
           data-ocid="dashboard.notifications.list"
         >
-          {notifications.slice(0, 8).map((n, i) => (
-            <button
-              type="button"
-              key={n.id}
-              onClick={() => !n.isRead && onMarkRead(n.id)}
-              className={`w-full text-left glass-morphism rounded-xl border p-4 transition-smooth flex items-start gap-3 group ${
-                n.isRead
-                  ? "border-white/5 opacity-70"
-                  : "border-cyan-500/20 hover:border-cyan-500/40 cursor-pointer"
-              }`}
-              data-ocid={`dashboard.notifications.item.${i + 1}`}
-            >
-              <div className="shrink-0 mt-0.5">
-                <NotificationIcon type={n.notificationType} />
+          {Object.entries(grouped).map(([type, items]) => {
+            const badge = getNotificationBadge(type as NotificationType);
+            return (
+              <div key={type}>
+                <div className="flex items-center gap-2 mb-1.5">
+                  <span
+                    className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${badge.cls}`}
+                  >
+                    {badge.label}
+                  </span>
+                  <div className="flex-1 h-px bg-white/5" />
+                </div>
+                {items.map((n, i) => (
+                  <button
+                    type="button"
+                    key={n.id}
+                    onClick={() => !n.isRead && onMarkRead(n.id)}
+                    className={`w-full text-left glass-morphism rounded-xl border p-3 transition-smooth flex items-start gap-3 mb-1.5 group ${
+                      n.isRead
+                        ? "border-white/5 opacity-70"
+                        : "border-cyan-500/20 hover:border-cyan-500/40 cursor-pointer"
+                    }`}
+                    data-ocid={`dashboard.notifications.item.${i + 1}`}
+                  >
+                    <div className="shrink-0 mt-0.5">
+                      <NotificationIcon type={n.notificationType} />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p
+                        className={`text-xs font-semibold truncate ${n.isRead ? "text-muted-foreground" : "text-foreground"}`}
+                      >
+                        {n.title}
+                      </p>
+                      <p className="text-[10px] text-muted-foreground mt-0.5 line-clamp-2">
+                        {n.message}
+                      </p>
+                    </div>
+                    {!n.isRead && (
+                      <span className="shrink-0 w-2 h-2 rounded-full bg-cyan-400 mt-1.5" />
+                    )}
+                  </button>
+                ))}
               </div>
-              <div className="flex-1 min-w-0">
-                <p
-                  className={`text-sm font-semibold truncate ${n.isRead ? "text-muted-foreground" : "text-foreground"}`}
-                >
-                  {n.title}
-                </p>
-                <p className="text-xs text-muted-foreground mt-0.5 line-clamp-2">
-                  {n.message}
-                </p>
-              </div>
-              {!n.isRead && (
-                <span className="shrink-0 w-2 h-2 rounded-full bg-cyan-400 mt-1.5" />
-              )}
-            </button>
-          ))}
+            );
+          })}
         </div>
       )}
     </AnimatedSection>
@@ -611,18 +1140,16 @@ function DashboardContent() {
   const { data: allCourses = [] } = useAvailableCourses();
   const { data: profileOpt } = useStudentProfile();
   const { data: notifications = [] } = useMyNotifications();
+  const { data: testResults = [] } = useMyResults();
   const markReadMutation = useMarkNotificationRead();
   const markAllReadMutation = useMarkAllNotificationsRead();
 
-  // profileOpt can be null or StudentProfile (backend returns null if not found)
   const profile = profileOpt ?? null;
 
-  // Map courseId → course for fast lookup
   const courseMap = new Map<string, Course>(
     allCourses.map((c) => [c.id.toString(), c]),
   );
 
-  // Group materials by courseId
   const materialsByCourse = materials.reduce<Record<string, StudyMaterial[]>>(
     (acc, m) => {
       const key = m.courseId.toString();
@@ -743,12 +1270,10 @@ function DashboardContent() {
               },
               {
                 icon: Award,
-                label: "Join Date",
-                value: null,
+                label: "Tests Taken",
+                value: testResults.length,
                 color: "magenta" as const,
-                text: profile
-                  ? formatDate(BigInt(Date.now() * 1_000_000))
-                  : "—",
+                text: undefined as string | undefined,
               },
               {
                 icon: User,
@@ -770,7 +1295,7 @@ function DashboardContent() {
                     <s.icon className="w-4 h-4" />
                   </div>
                   <div className="font-display text-3xl font-extrabold gradient-text-cyan-violet">
-                    {s.value !== null ? (
+                    {s.value !== null && s.value !== undefined ? (
                       <CounterAnimation target={s.value} suffix="" />
                     ) : (
                       <span className="text-xl">{s.text}</span>
@@ -786,6 +1311,28 @@ function DashboardContent() {
         </div>
       </section>
 
+      {/* Attendance + Study Tracker Row */}
+      <section
+        className="pb-6 bg-background"
+        data-ocid="dashboard.analytics.section"
+      >
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <AnimatedSection className="mb-4">
+            <h2 className="font-display text-xl font-bold text-foreground">
+              Learning Analytics
+            </h2>
+          </AnimatedSection>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <AnimatedSection delay={0.05}>
+              <AttendanceRing percentage={78} />
+            </AnimatedSection>
+            <AnimatedSection delay={0.1}>
+              <DailyStudyTracker />
+            </AnimatedSection>
+          </div>
+        </div>
+      </section>
+
       {/* Main content */}
       <section
         className="py-8 pb-6 bg-background"
@@ -793,7 +1340,7 @@ function DashboardContent() {
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {/* Left: Enrolled Courses + My Materials */}
+            {/* Left: Enrolled Courses + My Materials + Tutorials */}
             <div className="lg:col-span-2 flex flex-col gap-6">
               {/* Enrolled Courses */}
               <AnimatedSection>
@@ -843,7 +1390,7 @@ function DashboardContent() {
                 )}
               </AnimatedSection>
 
-              {/* My Materials */}
+              {/* My Tutorials */}
               <AnimatedSection delay={0.15}>
                 <h2 className="font-display text-xl font-bold text-foreground mb-4">
                   My Tutorials
@@ -915,7 +1462,6 @@ function DashboardContent() {
                     </Link>
                   </div>
                 ) : (
-                  // Group by course
                   <div
                     className="flex flex-col gap-6"
                     onContextMenu={(e) => e.preventDefault()}
@@ -946,7 +1492,7 @@ function DashboardContent() {
               </AnimatedSection>
             </div>
 
-            {/* Right: Quick Actions + Announcements + Profile */}
+            {/* Right sidebar */}
             <div className="flex flex-col gap-6">
               <AnimatedSection delay={0.05}>
                 <h2 className="font-display text-xl font-bold text-foreground mb-4">
@@ -985,12 +1531,32 @@ function DashboardContent() {
                 </div>
               </AnimatedSection>
 
+              {/* Test Results Summary */}
+              <AnimatedSection delay={0.07}>
+                <TestResultsSummary results={testResults} />
+              </AnimatedSection>
+
+              {/* Leaderboard */}
+              <AnimatedSection delay={0.09}>
+                <LeaderboardWidget />
+              </AnimatedSection>
+
               <NotificationCenter
                 notifications={notifications}
                 onMarkRead={(id) => markReadMutation.mutate(id)}
                 onMarkAllRead={() => markAllReadMutation.mutate()}
                 isMarkingAll={markAllReadMutation.isPending}
               />
+
+              {/* AI Recommendations */}
+              <AnimatedSection delay={0.1}>
+                <AIRecommendations />
+              </AnimatedSection>
+
+              {/* Payment History */}
+              <AnimatedSection delay={0.12}>
+                <PaymentHistoryPanel enrollments={activeEnrollments} />
+              </AnimatedSection>
 
               {/* Profile section */}
               <AnimatedSection delay={0.15}>
@@ -1021,7 +1587,6 @@ function DashboardContent() {
                     </div>
                   </div>
 
-                  {/* Enrollment count */}
                   <div className="rounded-lg bg-white/5 border border-white/10 p-2.5 mb-3">
                     <div className="flex items-center justify-between">
                       <p className="text-[10px] text-muted-foreground uppercase tracking-wide">
@@ -1033,7 +1598,6 @@ function DashboardContent() {
                     </div>
                   </div>
 
-                  {/* Principal ID */}
                   {principalId && (
                     <div className="rounded-lg bg-white/5 border border-white/10 p-2.5 mb-3">
                       <p className="text-[10px] text-muted-foreground mb-1 uppercase tracking-wide">
@@ -1061,7 +1625,6 @@ function DashboardContent() {
                     </div>
                   )}
 
-                  {/* Profile edit toggle */}
                   {!editingProfile ? (
                     <div className="flex gap-2">
                       <button

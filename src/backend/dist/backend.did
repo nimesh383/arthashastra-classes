@@ -46,6 +46,43 @@ type Testimonial =
    subject: text;
    "text": text;
  };
+type TestResult = 
+ record {
+   attemptId: nat;
+   createdAt: Timestamp;
+   grade: text;
+   id: nat;
+   maxPoints: nat;
+   percentage: float64;
+   studentId: text;
+   testId: nat;
+   timeTaken: int;
+   totalPoints: nat;
+ };
+type TestAttemptAnswer = 
+ record {
+   attemptId: nat;
+   id: nat;
+   isCorrect: bool;
+   pointsAwarded: nat;
+   questionId: nat;
+   studentAnswer: text;
+ };
+type TestAttempt = 
+ record {
+   id: nat;
+   startedAt: Timestamp;
+   status: AttemptStatus;
+   studentId: text;
+   submittedAt: opt Timestamp;
+   testId: nat;
+ };
+type TestAnalytics = 
+ record {
+   avgScore: float64;
+   passRate: float64;
+   totalAttempts: nat;
+ };
 type TeacherInput = 
  record {
    email: text;
@@ -109,6 +146,35 @@ type SiteSettings =
    whatsappNumber: text;
    youtubeUrl: text;
  };
+type QuestionType = 
+ variant {
+   essay;
+   multiple_choice;
+ };
+type QuestionInput = 
+ record {
+   correctAnswer: text;
+   explanation: text;
+   options: vec text;
+   orderIndex: nat;
+   points: nat;
+   questionType: QuestionType;
+   testId: nat;
+   "text": text;
+ };
+type Question = 
+ record {
+   correctAnswer: text;
+   createdAt: Timestamp;
+   explanation: text;
+   id: nat;
+   options: vec text;
+   orderIndex: nat;
+   points: nat;
+   questionType: QuestionType;
+   testId: nat;
+   "text": text;
+ };
 type PurchaseCourseInput = 
  record {
    amountPaid: nat;
@@ -164,6 +230,11 @@ type Notification =
    notificationType: NotificationType;
    title: text;
    userId: principal;
+ };
+type MessageRole = 
+ variant {
+   assistant;
+   user;
  };
 type MaterialType = 
  variant {
@@ -240,6 +311,59 @@ type Feedback =
    rating: nat;
    studentId: principal;
  };
+type EventStatus = 
+ variant {
+   cancelled;
+   completed;
+   ongoing;
+   upcoming;
+ };
+type EventRegistrationInput = 
+ record {
+   email: text;
+   eventId: nat;
+   name: text;
+   phone: text;
+ };
+type EventRegistration = 
+ record {
+   email: text;
+   eventId: nat;
+   id: nat;
+   name: text;
+   phone: text;
+   registeredAt: Timestamp;
+   studentId: text;
+ };
+type EventInput = 
+ record {
+   capacity: nat;
+   description: text;
+   endDate: Timestamp;
+   eventDate: Timestamp;
+   imageUrl: text;
+   isVisible: bool;
+   speaker: text;
+   status: EventStatus;
+   title: text;
+   topics: vec text;
+ };
+type Event = 
+ record {
+   capacity: nat;
+   createdAt: Timestamp;
+   description: text;
+   endDate: Timestamp;
+   eventDate: Timestamp;
+   id: nat;
+   imageUrl: text;
+   isVisible: bool;
+   registeredCount: nat;
+   speaker: text;
+   status: EventStatus;
+   title: text;
+   topics: vec text;
+ };
 type EnrollmentStatus = 
  variant {
    Completed;
@@ -288,6 +412,38 @@ type Enquiry =
    phone: text;
    status: EnquiryStatus;
    timestamp: Timestamp;
+ };
+type DownloadItemInput = 
+ record {
+   batchYear: text;
+   category: DownloadCategory;
+   description: text;
+   fileSize: text;
+   fileUrl: text;
+   isPublic: bool;
+   subject: text;
+   title: text;
+ };
+type DownloadItem = 
+ record {
+   batchYear: text;
+   category: DownloadCategory;
+   createdAt: Timestamp;
+   description: text;
+   downloadCount: nat;
+   fileSize: text;
+   fileUrl: text;
+   id: nat;
+   isPublic: bool;
+   subject: text;
+   title: text;
+ };
+type DownloadCategory = 
+ variant {
+   admit_card;
+   certificate;
+   hall_ticket;
+   study_notes;
  };
 type DiscountType = 
  variant {
@@ -347,6 +503,14 @@ type ConfirmPaymentInput =
    enrollmentId: nat;
    paymentId: text;
  };
+type ChatMessage = 
+ record {
+   content: text;
+   id: nat;
+   role: MessageRole;
+   sessionId: text;
+   timestamp: Timestamp;
+ };
 type Category = 
  variant {
    Book;
@@ -366,6 +530,12 @@ type Bookmark =
    itemId: text;
    itemType: ItemType;
    userId: principal;
+ };
+type AttemptStatus = 
+ variant {
+   in_progress;
+   submitted;
+   timed_out;
  };
 type AnnouncementType = 
  variant {
@@ -400,13 +570,17 @@ type AdminStudentView =
  };
 service : {
   addBookmark: (input: BookmarkInput) -> (Bookmark);
+  clearChatSession: (sessionId: text) -> (bool);
   confirmPayment: (input: ConfirmPaymentInput) -> (opt Enrollment);
   createAnnouncement: (input: AnnouncementInput) -> (Announcement);
   createCoupon: (input: CouponInput) -> (Coupon);
   createCourse: (input: CourseInput) -> (Course);
+  createDownloadItem: (input: DownloadItemInput) -> (DownloadItem);
+  createEvent: (input: EventInput) -> (Event);
   createGalleryImage: (input: GalleryImageInput) -> (GalleryImage);
   createNotification: (input: NotificationInput) -> (vec Notification);
   createProduct: (input: ProductInput) -> (Product);
+  createQuestion: (input: QuestionInput) -> (Question);
   createTeacher: (input: TeacherInput) -> (Teacher);
   createTestimonial: (input: TestimonialInput) -> (Testimonial);
   createVideo: (input: VideoInput) -> (variant {
@@ -416,9 +590,12 @@ service : {
   deleteAnnouncement: (id: text) -> (bool);
   deleteCoupon: (id: text) -> (bool);
   deleteCourse: (id: nat) -> (bool);
+  deleteDownloadItem: (id: nat) -> (bool);
+  deleteEvent: (id: nat) -> (bool);
   deleteGalleryImage: (id: text) -> (bool);
   deleteMaterial: (id: nat) -> (bool);
   deleteProduct: (id: nat) -> (bool);
+  deleteQuestion: (id: nat) -> (bool);
   deleteTeacher: (id: nat) -> (bool);
   deleteTestimonial: (id: text) -> (bool);
   deleteVideo: (id: text) -> (variant {
@@ -432,41 +609,70 @@ service : {
   getAdminPayments: () -> (vec EnrollmentAdminView) query;
   getAdminProducts: () -> (vec Product) query;
   getAdminStudents: () -> (vec AdminStudentView) query;
+  getAdminTestAnalytics: (testId: nat) -> (TestAnalytics) query;
+  getAttemptAnswers: (attemptId: nat) -> (vec TestAttemptAnswer) query;
   getAvailableCourses: () -> (vec Course) query;
+  getChatHistory: (sessionId: text) -> (vec ChatMessage) query;
   getCourseDetail: (id: nat) -> (opt Course) query;
   getCourses: () -> (vec Course) query;
+  getDownloadItems: (category: opt DownloadCategory) ->
+   (vec DownloadItem) query;
   getEnquiries: () -> (vec Enquiry) query;
+  getEventDetail: (id: nat) -> (opt Event) query;
+  getEventRegistrations: (eventId: nat) -> (vec EventRegistration) query;
+  getEvents: () -> (vec Event) query;
   getFeedback: () -> (vec Feedback) query;
   getFeedbackByCourse: (courseId: text) -> (vec Feedback) query;
   getGalleryImages: (category: opt GalleryCategory) ->
    (vec GalleryImage) query;
   getMaterialsForCourse: (courseId: nat) -> (vec StudyMaterial) query;
+  getMyAttempts: (testId: opt nat) -> (vec TestAttempt) query;
   getMyBookmarks: () -> (vec Bookmark) query;
+  getMyDownloads: (category: opt DownloadCategory) ->
+   (vec DownloadItem) query;
   getMyEnrollments: () -> (vec Enrollment) query;
   getMyFeedback: () -> (vec Feedback) query;
   getMyMaterials: () -> (vec StudyMaterial) query;
   getMyNotifications: () -> (vec Notification) query;
+  getMyRegistrations: () -> (vec EventRegistration) query;
+  getMyResults: () -> (vec TestResult) query;
   getMyVideosForCourse: (courseId: text) ->
    (variant {
       err: text;
       ok: vec Video;
     }) query;
+  getPastEvents: () -> (vec Event) query;
   getPreviewVideos: () -> (vec Video) query;
   getProductDetail: (id: nat) -> (opt Product) query;
   getProducts: () -> (vec Product) query;
+  getQuestionCount: (testId: nat) -> (nat) query;
+  getQuestionsByTest: (testId: nat) -> (vec Question) query;
   getSiteSettings: () -> (SiteSettings) query;
   getStudentProfile: () -> (opt StudentProfile) query;
   getStudyMaterials: () -> (vec StudyMaterial) query;
   getTeacher: (id: nat) -> (opt Teacher) query;
   getTeachers: () -> (vec Teacher) query;
+  getTestLeaderboard: (testId: nat) -> (vec record {
+                                              text;
+                                              float64;
+                                            }) query;
   getTestimonials: () -> (vec Testimonial) query;
+  getUpcomingEvents: () -> (vec Event) query;
   getVideos: () -> (vec Video) query;
   getVideosByCourse: (courseId: text) -> (vec Video) query;
+  incrementDownloadCount: (id: nat) -> (bool);
   isEnrolled: (courseId: nat) -> (bool) query;
   markAllNotificationsRead: () -> (nat);
   markNotificationRead: (id: text) -> (bool);
   purchaseCourse: (input: PurchaseCourseInput) -> (Enrollment);
+  registerForEvent: (input: EventRegistrationInput) -> (EventRegistration);
   removeBookmark: (itemId: text) -> (bool);
+  sendChatMessage: (sessionId: text, message: text) -> (text);
+  startAttempt: (testId: nat) -> (TestAttempt);
+  submitAttempt: (attemptId: nat, answers: vec record {
+                                                 nat;
+                                                 text;
+                                               }) -> (TestResult);
   submitEnquiry: (input: EnquiryInput) -> (nat);
   submitFeedback: (input: FeedbackInput) -> (Feedback);
   toggleAnnouncementActive: (id: text) -> (opt Announcement);
@@ -476,7 +682,11 @@ service : {
    (opt Announcement);
   updateCoupon: (id: text, input: CouponInput) -> (opt Coupon);
   updateCourse: (id: nat, input: CourseInput) -> (opt Course);
+  updateDownloadItem: (id: nat, input: DownloadItemInput) ->
+   (opt DownloadItem);
+  updateEvent: (id: nat, input: EventInput) -> (opt Event);
   updateProduct: (id: nat, input: ProductInput) -> (opt Product);
+  updateQuestion: (id: nat, input: QuestionInput) -> (opt Question);
   updateSiteSettings: (settings: SiteSettings) -> (SiteSettings);
   updateStudentProfile: (input: ProfileInput) -> ();
   updateTeacher: (id: nat, input: TeacherInput) -> (opt Teacher);

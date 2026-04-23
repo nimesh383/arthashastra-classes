@@ -35,6 +35,9 @@ export interface AnnouncementInput {
 export type AnnouncementType = { 'warning' : null } |
   { 'info' : null } |
   { 'urgent' : null };
+export type AttemptStatus = { 'submitted' : null } |
+  { 'in_progress' : null } |
+  { 'timed_out' : null };
 export interface Bookmark {
   'id' : string,
   'itemId' : string,
@@ -47,6 +50,13 @@ export type Category = { 'Book' : null } |
   { 'Notes' : null } |
   { 'DigitalResource' : null } |
   { 'Merchandise' : null };
+export interface ChatMessage {
+  'id' : bigint,
+  'content' : string,
+  'role' : MessageRole,
+  'timestamp' : Timestamp,
+  'sessionId' : string,
+}
 export interface ConfirmPaymentInput {
   'enrollmentId' : bigint,
   'paymentId' : string,
@@ -97,6 +107,33 @@ export interface CourseInput {
 }
 export type DiscountType = { 'flat' : null } |
   { 'percent' : null };
+export type DownloadCategory = { 'admit_card' : null } |
+  { 'study_notes' : null } |
+  { 'certificate' : null } |
+  { 'hall_ticket' : null };
+export interface DownloadItem {
+  'id' : bigint,
+  'title' : string,
+  'subject' : string,
+  'createdAt' : Timestamp,
+  'description' : string,
+  'fileSize' : string,
+  'category' : DownloadCategory,
+  'downloadCount' : bigint,
+  'isPublic' : boolean,
+  'batchYear' : string,
+  'fileUrl' : string,
+}
+export interface DownloadItemInput {
+  'title' : string,
+  'subject' : string,
+  'description' : string,
+  'fileSize' : string,
+  'category' : DownloadCategory,
+  'isPublic' : boolean,
+  'batchYear' : string,
+  'fileUrl' : string,
+}
 export interface Enquiry {
   'id' : bigint,
   'status' : EnquiryStatus,
@@ -136,6 +173,52 @@ export type EnrollmentStatus = { 'Failed' : null } |
   { 'Refunded' : null } |
   { 'Completed' : null } |
   { 'Pending' : null };
+export interface Event {
+  'id' : bigint,
+  'status' : EventStatus,
+  'title' : string,
+  'endDate' : Timestamp,
+  'registeredCount' : bigint,
+  'createdAt' : Timestamp,
+  'description' : string,
+  'imageUrl' : string,
+  'topics' : Array<string>,
+  'isVisible' : boolean,
+  'capacity' : bigint,
+  'speaker' : string,
+  'eventDate' : Timestamp,
+}
+export interface EventInput {
+  'status' : EventStatus,
+  'title' : string,
+  'endDate' : Timestamp,
+  'description' : string,
+  'imageUrl' : string,
+  'topics' : Array<string>,
+  'isVisible' : boolean,
+  'capacity' : bigint,
+  'speaker' : string,
+  'eventDate' : Timestamp,
+}
+export interface EventRegistration {
+  'id' : bigint,
+  'eventId' : bigint,
+  'studentId' : string,
+  'name' : string,
+  'email' : string,
+  'phone' : string,
+  'registeredAt' : Timestamp,
+}
+export interface EventRegistrationInput {
+  'eventId' : bigint,
+  'name' : string,
+  'email' : string,
+  'phone' : string,
+}
+export type EventStatus = { 'upcoming' : null } |
+  { 'cancelled' : null } |
+  { 'completed' : null } |
+  { 'ongoing' : null };
 export interface Feedback {
   'id' : string,
   'studentId' : Principal,
@@ -191,6 +274,8 @@ export interface MaterialInput {
 export type MaterialType = { 'PDF' : null } |
   { 'PYQ' : null } |
   { 'Notes' : null };
+export type MessageRole = { 'user' : null } |
+  { 'assistant' : null };
 export interface Notification {
   'id' : string,
   'title' : string,
@@ -238,6 +323,30 @@ export interface PurchaseCourseInput {
   'paymentId' : string,
   'courseId' : bigint,
 }
+export interface Question {
+  'id' : bigint,
+  'explanation' : string,
+  'createdAt' : Timestamp,
+  'text' : string,
+  'correctAnswer' : string,
+  'questionType' : QuestionType,
+  'testId' : bigint,
+  'options' : Array<string>,
+  'orderIndex' : bigint,
+  'points' : bigint,
+}
+export interface QuestionInput {
+  'explanation' : string,
+  'text' : string,
+  'correctAnswer' : string,
+  'questionType' : QuestionType,
+  'testId' : bigint,
+  'options' : Array<string>,
+  'orderIndex' : bigint,
+  'points' : bigint,
+}
+export type QuestionType = { 'multiple_choice' : null } |
+  { 'essay' : null };
 export interface SiteSettings {
   'telegramUrl' : string,
   'heroText' : string,
@@ -293,6 +402,39 @@ export interface TeacherInput {
   'specialization' : string,
   'profilePhotoUrl' : [] | [string],
 }
+export interface TestAnalytics {
+  'avgScore' : number,
+  'passRate' : number,
+  'totalAttempts' : bigint,
+}
+export interface TestAttempt {
+  'id' : bigint,
+  'status' : AttemptStatus,
+  'startedAt' : Timestamp,
+  'studentId' : string,
+  'submittedAt' : [] | [Timestamp],
+  'testId' : bigint,
+}
+export interface TestAttemptAnswer {
+  'id' : bigint,
+  'pointsAwarded' : bigint,
+  'attemptId' : bigint,
+  'studentAnswer' : string,
+  'isCorrect' : boolean,
+  'questionId' : bigint,
+}
+export interface TestResult {
+  'id' : bigint,
+  'studentId' : string,
+  'attemptId' : bigint,
+  'maxPoints' : bigint,
+  'createdAt' : Timestamp,
+  'grade' : string,
+  'totalPoints' : bigint,
+  'timeTaken' : bigint,
+  'testId' : bigint,
+  'percentage' : number,
+}
 export interface Testimonial {
   'id' : string,
   'marks' : string,
@@ -339,13 +481,17 @@ export interface VideoInput {
 }
 export interface _SERVICE {
   'addBookmark' : ActorMethod<[BookmarkInput], Bookmark>,
+  'clearChatSession' : ActorMethod<[string], boolean>,
   'confirmPayment' : ActorMethod<[ConfirmPaymentInput], [] | [Enrollment]>,
   'createAnnouncement' : ActorMethod<[AnnouncementInput], Announcement>,
   'createCoupon' : ActorMethod<[CouponInput], Coupon>,
   'createCourse' : ActorMethod<[CourseInput], Course>,
+  'createDownloadItem' : ActorMethod<[DownloadItemInput], DownloadItem>,
+  'createEvent' : ActorMethod<[EventInput], Event>,
   'createGalleryImage' : ActorMethod<[GalleryImageInput], GalleryImage>,
   'createNotification' : ActorMethod<[NotificationInput], Array<Notification>>,
   'createProduct' : ActorMethod<[ProductInput], Product>,
+  'createQuestion' : ActorMethod<[QuestionInput], Question>,
   'createTeacher' : ActorMethod<[TeacherInput], Teacher>,
   'createTestimonial' : ActorMethod<[TestimonialInput], Testimonial>,
   'createVideo' : ActorMethod<
@@ -356,9 +502,12 @@ export interface _SERVICE {
   'deleteAnnouncement' : ActorMethod<[string], boolean>,
   'deleteCoupon' : ActorMethod<[string], boolean>,
   'deleteCourse' : ActorMethod<[bigint], boolean>,
+  'deleteDownloadItem' : ActorMethod<[bigint], boolean>,
+  'deleteEvent' : ActorMethod<[bigint], boolean>,
   'deleteGalleryImage' : ActorMethod<[string], boolean>,
   'deleteMaterial' : ActorMethod<[bigint], boolean>,
   'deleteProduct' : ActorMethod<[bigint], boolean>,
+  'deleteQuestion' : ActorMethod<[bigint], boolean>,
   'deleteTeacher' : ActorMethod<[bigint], boolean>,
   'deleteTestimonial' : ActorMethod<[string], boolean>,
   'deleteVideo' : ActorMethod<[string], { 'ok' : null } | { 'err' : string }>,
@@ -369,10 +518,20 @@ export interface _SERVICE {
   'getAdminPayments' : ActorMethod<[], Array<EnrollmentAdminView>>,
   'getAdminProducts' : ActorMethod<[], Array<Product>>,
   'getAdminStudents' : ActorMethod<[], Array<AdminStudentView>>,
+  'getAdminTestAnalytics' : ActorMethod<[bigint], TestAnalytics>,
+  'getAttemptAnswers' : ActorMethod<[bigint], Array<TestAttemptAnswer>>,
   'getAvailableCourses' : ActorMethod<[], Array<Course>>,
+  'getChatHistory' : ActorMethod<[string], Array<ChatMessage>>,
   'getCourseDetail' : ActorMethod<[bigint], [] | [Course]>,
   'getCourses' : ActorMethod<[], Array<Course>>,
+  'getDownloadItems' : ActorMethod<
+    [[] | [DownloadCategory]],
+    Array<DownloadItem>
+  >,
   'getEnquiries' : ActorMethod<[], Array<Enquiry>>,
+  'getEventDetail' : ActorMethod<[bigint], [] | [Event]>,
+  'getEventRegistrations' : ActorMethod<[bigint], Array<EventRegistration>>,
+  'getEvents' : ActorMethod<[], Array<Event>>,
   'getFeedback' : ActorMethod<[], Array<Feedback>>,
   'getFeedbackByCourse' : ActorMethod<[string], Array<Feedback>>,
   'getGalleryImages' : ActorMethod<
@@ -380,32 +539,49 @@ export interface _SERVICE {
     Array<GalleryImage>
   >,
   'getMaterialsForCourse' : ActorMethod<[bigint], Array<StudyMaterial>>,
+  'getMyAttempts' : ActorMethod<[[] | [bigint]], Array<TestAttempt>>,
   'getMyBookmarks' : ActorMethod<[], Array<Bookmark>>,
+  'getMyDownloads' : ActorMethod<
+    [[] | [DownloadCategory]],
+    Array<DownloadItem>
+  >,
   'getMyEnrollments' : ActorMethod<[], Array<Enrollment>>,
   'getMyFeedback' : ActorMethod<[], Array<Feedback>>,
   'getMyMaterials' : ActorMethod<[], Array<StudyMaterial>>,
   'getMyNotifications' : ActorMethod<[], Array<Notification>>,
+  'getMyRegistrations' : ActorMethod<[], Array<EventRegistration>>,
+  'getMyResults' : ActorMethod<[], Array<TestResult>>,
   'getMyVideosForCourse' : ActorMethod<
     [string],
     { 'ok' : Array<Video> } |
       { 'err' : string }
   >,
+  'getPastEvents' : ActorMethod<[], Array<Event>>,
   'getPreviewVideos' : ActorMethod<[], Array<Video>>,
   'getProductDetail' : ActorMethod<[bigint], [] | [Product]>,
   'getProducts' : ActorMethod<[], Array<Product>>,
+  'getQuestionCount' : ActorMethod<[bigint], bigint>,
+  'getQuestionsByTest' : ActorMethod<[bigint], Array<Question>>,
   'getSiteSettings' : ActorMethod<[], SiteSettings>,
   'getStudentProfile' : ActorMethod<[], [] | [StudentProfile]>,
   'getStudyMaterials' : ActorMethod<[], Array<StudyMaterial>>,
   'getTeacher' : ActorMethod<[bigint], [] | [Teacher]>,
   'getTeachers' : ActorMethod<[], Array<Teacher>>,
+  'getTestLeaderboard' : ActorMethod<[bigint], Array<[string, number]>>,
   'getTestimonials' : ActorMethod<[], Array<Testimonial>>,
+  'getUpcomingEvents' : ActorMethod<[], Array<Event>>,
   'getVideos' : ActorMethod<[], Array<Video>>,
   'getVideosByCourse' : ActorMethod<[string], Array<Video>>,
+  'incrementDownloadCount' : ActorMethod<[bigint], boolean>,
   'isEnrolled' : ActorMethod<[bigint], boolean>,
   'markAllNotificationsRead' : ActorMethod<[], bigint>,
   'markNotificationRead' : ActorMethod<[string], boolean>,
   'purchaseCourse' : ActorMethod<[PurchaseCourseInput], Enrollment>,
+  'registerForEvent' : ActorMethod<[EventRegistrationInput], EventRegistration>,
   'removeBookmark' : ActorMethod<[string], boolean>,
+  'sendChatMessage' : ActorMethod<[string, string], string>,
+  'startAttempt' : ActorMethod<[bigint], TestAttempt>,
+  'submitAttempt' : ActorMethod<[bigint, Array<[bigint, string]>], TestResult>,
   'submitEnquiry' : ActorMethod<[EnquiryInput], bigint>,
   'submitFeedback' : ActorMethod<[FeedbackInput], Feedback>,
   'toggleAnnouncementActive' : ActorMethod<[string], [] | [Announcement]>,
@@ -417,7 +593,13 @@ export interface _SERVICE {
   >,
   'updateCoupon' : ActorMethod<[string, CouponInput], [] | [Coupon]>,
   'updateCourse' : ActorMethod<[bigint, CourseInput], [] | [Course]>,
+  'updateDownloadItem' : ActorMethod<
+    [bigint, DownloadItemInput],
+    [] | [DownloadItem]
+  >,
+  'updateEvent' : ActorMethod<[bigint, EventInput], [] | [Event]>,
   'updateProduct' : ActorMethod<[bigint, ProductInput], [] | [Product]>,
+  'updateQuestion' : ActorMethod<[bigint, QuestionInput], [] | [Question]>,
   'updateSiteSettings' : ActorMethod<[SiteSettings], SiteSettings>,
   'updateStudentProfile' : ActorMethod<[ProfileInput], undefined>,
   'updateTeacher' : ActorMethod<[bigint, TeacherInput], [] | [Teacher]>,

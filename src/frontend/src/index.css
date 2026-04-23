@@ -161,18 +161,242 @@
   }
 
   .neon-border-cyan {
-    @apply border border-cyan-500 shadow-[0_0_15px_oklch(0.68_0.24_200/0.5)];
+    @apply border border-cyan-500;
+    box-shadow: 0 0 15px oklch(0.68 0.24 200 / 0.5);
   }
 
   .neon-border-violet {
-    @apply border border-violet-500 shadow-[0_0_15px_oklch(0.55_0.20_270/0.5)];
+    @apply border border-violet-500;
+    box-shadow: 0 0 15px oklch(0.55 0.2 270 / 0.5);
   }
 
   .gradient-text-cyan-violet {
     @apply bg-gradient-to-r from-cyan-400 to-violet-500 bg-clip-text text-transparent;
   }
 
-  /* Admin Portal Utilities */
+  .chatbot-bubble-user {
+    @apply bg-primary text-primary-foreground rounded-2xl rounded-tr-none px-4 py-3 max-w-xs shadow-lg;
+  }
+
+  .chatbot-bubble-assistant {
+    @apply bg-card text-card-foreground rounded-2xl rounded-tl-none px-4 py-3 max-w-xs glow-cyan border border-primary/30;
+  }
+
+  .chatbot-panel {
+    @apply fixed bottom-6 right-6 w-96 max-w-[calc(100vw-1rem)] bg-card glass-morphism rounded-2xl shadow-2xl glow-cyan flex flex-col;
+  }
+
+  .test-timer {
+    @apply relative w-20 h-20 flex items-center justify-center font-display font-bold text-2xl glow-cyan border-2 border-primary rounded-full;
+  }
+
+  .test-question-nav {
+    @apply grid grid-cols-6 gap-2 p-4 glass-morphism rounded-lg;
+    background-color: oklch(var(--card) / 0.5);
+  }
+
+  .test-question-btn {
+    @apply w-10 h-10 flex items-center justify-center rounded-lg text-xs font-semibold transition-smooth hover:glow-cyan cursor-pointer;
+  }
+
+  .test-question-btn-current {
+    @apply bg-primary text-primary-foreground glow-cyan;
+  }
+
+  .test-question-btn-answered {
+    @apply bg-success/20 border border-success text-success;
+  }
+
+  .test-question-btn-unanswered {
+    @apply bg-muted/30 border border-border text-muted-foreground hover:border-primary;
+  }
+
+  .test-progress-bar {
+    @apply h-2 bg-muted rounded-full overflow-hidden;
+  }
+
+  .test-progress-fill {
+    @apply h-full bg-gradient-to-r from-primary to-accent rounded-full;
+  }
+
+  .result-score-ring {
+    @apply relative w-40 h-40 rounded-full border-8 border-primary flex items-center justify-center text-center glow-cyan;
+  }
+
+  .result-grade-badge {
+    @apply inline-flex items-center justify-center w-24 h-24 rounded-full font-display text-4xl font-bold text-primary-foreground bg-gradient-to-br from-primary to-accent glow-cyan;
+  }
+
+  .result-accuracy-card {
+    @apply bg-card glass-morphism p-6 rounded-xl border-l-4 border-primary space-y-2;
+  }
+
+  .result-accuracy-label {
+    @apply text-sm text-muted-foreground font-medium;
+  }
+
+  .result-accuracy-value {
+    @apply text-3xl font-display font-bold text-foreground;
+  }
+
+  .teacher-stat-card {
+    @apply bg-card glass-morphism p-6 rounded-xl border border-border hover:border-primary hover:glow-cyan transition-smooth;
+  }
+
+  .teacher-stat-label {
+    @apply text-sm text-muted-foreground font-medium uppercase tracking-wide;
+  }
+
+  .teacher-stat-value {
+    @apply text-3xl font-display font-bold text-foreground mt-2;
+  }
+
+  .teacher-stat-icon {
+    @apply text-2xl text-primary mb-2;
+  }
+
+  .checkout-summary-card {
+    @apply bg-card glass-morphism p-6 rounded-xl border border-primary/30 space-y-4 glow-cyan;
+  }
+
+  .checkout-item-row {
+    @apply flex justify-between items-center py-2 border-b text-sm;
+    border-color: oklch(var(--border) / 0.5);
+  }
+
+  .checkout-total-row {
+    @apply flex justify-between items-center py-3 border-t border-primary/30 font-display font-bold text-lg text-primary;
+  }
+
+  .checkout-form-group {
+    @apply space-y-2;
+  }
+
+  .checkout-form-label {
+    @apply block text-sm font-semibold text-foreground;
+  }
+
+  .checkout-form-input {
+    @apply w-full bg-input border border-border rounded-lg px-4 py-2 text-foreground transition-smooth focus:border-primary focus:glow-cyan focus:outline-none;
+  }
+
+  .checkout-cta-button {
+    @apply w-full py-3 font-display font-bold text-lg rounded-lg transition-smooth glow-cyan bg-primary text-primary-foreground hover:opacity-90;
+  }
+
+  .payment-success-checkmark {
+    @apply w-24 h-24 rounded-full bg-success/20 border-4 border-success flex items-center justify-center text-success text-5xl glow-success;
+  }
+
+  .payment-receipt-card {
+    @apply bg-card glass-morphism p-8 rounded-xl border border-border space-y-6 max-w-2xl mx-auto;
+  }
+
+  .payment-receipt-row {
+    @apply flex justify-between items-center py-3 border-b;
+    border-color: oklch(var(--border) / 0.5);
+  }
+
+  .payment-receipt-label {
+    @apply text-muted-foreground text-sm;
+  }
+
+  .payment-receipt-value {
+    @apply font-display font-bold text-foreground;
+  }
+
+  .payment-receipt-amount {
+    @apply text-2xl font-display font-bold text-primary;
+  }
+
+  .download-grid {
+    @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4;
+  }
+
+  .download-card {
+    @apply bg-card glass-morphism p-6 rounded-xl border border-border hover:border-primary hover:glow-cyan transition-smooth cursor-pointer;
+  }
+
+  .download-icon {
+    @apply text-3xl text-primary mb-3;
+  }
+
+  .download-title {
+    @apply font-display font-bold text-lg text-foreground mb-1;
+  }
+
+  .download-meta {
+    @apply text-xs text-muted-foreground;
+  }
+
+  .download-btn {
+    @apply mt-4 px-4 py-2 bg-primary/20 text-primary border border-primary rounded-lg text-sm font-semibold transition-smooth hover:bg-primary/30;
+  }
+
+  .event-card {
+    @apply bg-card glass-morphism p-6 rounded-xl border border-border hover:border-primary hover:glow-cyan transition-smooth;
+  }
+
+  .event-countdown {
+    @apply grid grid-cols-4 gap-2 my-4;
+  }
+
+  .event-countdown-item {
+    @apply text-center px-3 py-2 bg-primary/10 border border-primary/30 rounded-lg;
+  }
+
+  .event-countdown-number {
+    @apply block text-2xl font-display font-bold text-primary;
+  }
+
+  .event-countdown-label {
+    @apply text-xs text-muted-foreground uppercase;
+  }
+
+  .event-register-btn {
+    @apply w-full py-2 bg-accent text-accent-foreground rounded-lg font-semibold transition-smooth hover:opacity-90 glow-magenta;
+  }
+
+  .ticker-bar {
+    @apply fixed top-0 left-0 right-0 z-40 bg-gradient-to-r from-primary/20 to-accent/20 backdrop-blur-md border-b border-primary/30 py-2 overflow-hidden glass-morphism;
+  }
+
+  .ticker-content {
+    @apply flex items-center gap-8 whitespace-nowrap;
+  }
+
+  .ticker-item {
+    @apply text-sm font-medium text-primary flex items-center gap-3;
+  }
+
+  .ticker-dot {
+    @apply w-2 h-2 rounded-full bg-accent;
+  }
+
+  .mobile-nav-bar {
+    @apply fixed bottom-0 left-0 right-0 z-40 md:hidden glass-morphism border-t border-primary/30 py-2 px-4;
+  }
+
+  .mobile-nav-grid {
+    @apply flex justify-around items-center max-w-md mx-auto;
+  }
+
+  .mobile-nav-item {
+    @apply flex flex-col items-center justify-center gap-1 px-3 py-2 rounded-lg text-xs transition-smooth;
+  }
+
+  .mobile-nav-item-active {
+    @apply bg-primary/20 text-primary glow-cyan;
+  }
+
+  .mobile-nav-item-inactive {
+    @apply text-muted-foreground hover:text-foreground;
+  }
+
+  .mobile-nav-icon {
+    @apply text-xl;
+  }
+
   .admin-sidebar-nav {
     @apply flex items-center gap-3 px-4 py-3 rounded-md transition-smooth cursor-pointer hover:bg-[oklch(var(--admin-bg-hover))];
   }

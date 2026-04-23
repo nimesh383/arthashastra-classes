@@ -63,6 +63,18 @@ Retro-futuristic deep tech platform with cinematic energy. Premium, ambitious, c
 - **Role Differentiation**: Admin (cyan accent), Teacher (warning/yellow-adjacent accent), Student (success/teal accent)
 - **File Upload**: Drag-drop zone with dashed border; visual feedback on drop; progress indicator on upload
 
+## Phase 3: New Component Layers
+- **AI Chatbot**: Float 3s infinite; fixed bottom-right `chatbot-panel`; bubbles use glow-cyan border + chat-slide entrance; minimizable with drawer fallback on mobile
+- **Test Interface**: Timer uses timer-pulse 1.5s infinite glow; question navigator grid (6 columns) with state-based buttons (answered=success, current=primary, unanswered=muted); progress bar gradient-fill via CSS animation
+- **Test Results**: Score ring SVG with ring-fill animation 2s ease-out; grade badge uses success-scale 0.6s cubic-bezier for celebration; accuracy cards with left border-l-4 accent
+- **Teacher Dashboard**: Stat cards hover-glow on border-primary; icon + label + value layout; batch performance table maintains admin table patterns
+- **Checkout**: Summary card glow-cyan; form fields focus-glow; total row highlights primary color; CTA button full-width with opacity-90 hover
+- **Payment Success**: Checkmark SVG success-scale animate; receipt card centered max-w-2xl; row grid layout with label/value pairs; confirmation CTA + return home button
+- **Download Center**: Grid 3-column (lg), 2-column (md), 1-column (sm); card icons + title + meta + download-btn; category filter tabs; search input with focus-glow
+- **Events Page**: Event card hover-glow; countdown grid 4-column with flash animation per item; register button full-width with accent color; past events gallery grid
+- **Announcement Ticker**: Fixed top z-40, ticker-scroll 30s linear infinite; glass-morphism border-b; items with dots separator; gradient background primary/20 to accent/20
+- **Mobile Bottom Nav**: Fixed bottom z-40 md:hidden; glass-morphism border-t; 5-icon flex grid; active state bg-primary/20 text-primary glow-cyan; slide-in animation on entry
+
 ## Differentiation
 Deep space + neon aesthetic creates premium tech-startup feel. Extends hero cinematic language into admin productivity UI — glass morphism maintains futuristic depth, glow effects on all interactive elements, no corporate blues or gold/yellow. Data density balanced with breathing room; role-based visual hierarchy prevents UI overload.
 

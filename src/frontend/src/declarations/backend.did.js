@@ -131,6 +131,68 @@ export const Course = IDL.Record({
   'imageUrl' : IDL.Opt(IDL.Text),
   'price' : IDL.Nat,
 });
+export const DownloadCategory = IDL.Variant({
+  'admit_card' : IDL.Null,
+  'study_notes' : IDL.Null,
+  'certificate' : IDL.Null,
+  'hall_ticket' : IDL.Null,
+});
+export const DownloadItemInput = IDL.Record({
+  'title' : IDL.Text,
+  'subject' : IDL.Text,
+  'description' : IDL.Text,
+  'fileSize' : IDL.Text,
+  'category' : DownloadCategory,
+  'isPublic' : IDL.Bool,
+  'batchYear' : IDL.Text,
+  'fileUrl' : IDL.Text,
+});
+export const DownloadItem = IDL.Record({
+  'id' : IDL.Nat,
+  'title' : IDL.Text,
+  'subject' : IDL.Text,
+  'createdAt' : Timestamp,
+  'description' : IDL.Text,
+  'fileSize' : IDL.Text,
+  'category' : DownloadCategory,
+  'downloadCount' : IDL.Nat,
+  'isPublic' : IDL.Bool,
+  'batchYear' : IDL.Text,
+  'fileUrl' : IDL.Text,
+});
+export const EventStatus = IDL.Variant({
+  'upcoming' : IDL.Null,
+  'cancelled' : IDL.Null,
+  'completed' : IDL.Null,
+  'ongoing' : IDL.Null,
+});
+export const EventInput = IDL.Record({
+  'status' : EventStatus,
+  'title' : IDL.Text,
+  'endDate' : Timestamp,
+  'description' : IDL.Text,
+  'imageUrl' : IDL.Text,
+  'topics' : IDL.Vec(IDL.Text),
+  'isVisible' : IDL.Bool,
+  'capacity' : IDL.Nat,
+  'speaker' : IDL.Text,
+  'eventDate' : Timestamp,
+});
+export const Event = IDL.Record({
+  'id' : IDL.Nat,
+  'status' : EventStatus,
+  'title' : IDL.Text,
+  'endDate' : Timestamp,
+  'registeredCount' : IDL.Nat,
+  'createdAt' : Timestamp,
+  'description' : IDL.Text,
+  'imageUrl' : IDL.Text,
+  'topics' : IDL.Vec(IDL.Text),
+  'isVisible' : IDL.Bool,
+  'capacity' : IDL.Nat,
+  'speaker' : IDL.Text,
+  'eventDate' : Timestamp,
+});
 export const GalleryCategory = IDL.Variant({
   'team' : IDL.Null,
   'results' : IDL.Null,
@@ -197,6 +259,32 @@ export const Product = IDL.Record({
   'imageUrl' : IDL.Text,
   'category' : Category,
   'price' : IDL.Float64,
+});
+export const QuestionType = IDL.Variant({
+  'multiple_choice' : IDL.Null,
+  'essay' : IDL.Null,
+});
+export const QuestionInput = IDL.Record({
+  'explanation' : IDL.Text,
+  'text' : IDL.Text,
+  'correctAnswer' : IDL.Text,
+  'questionType' : QuestionType,
+  'testId' : IDL.Nat,
+  'options' : IDL.Vec(IDL.Text),
+  'orderIndex' : IDL.Nat,
+  'points' : IDL.Nat,
+});
+export const Question = IDL.Record({
+  'id' : IDL.Nat,
+  'explanation' : IDL.Text,
+  'createdAt' : Timestamp,
+  'text' : IDL.Text,
+  'correctAnswer' : IDL.Text,
+  'questionType' : QuestionType,
+  'testId' : IDL.Nat,
+  'options' : IDL.Vec(IDL.Text),
+  'orderIndex' : IDL.Nat,
+  'points' : IDL.Nat,
 });
 export const TeacherInput = IDL.Record({
   'name' : IDL.Text,
@@ -273,6 +361,30 @@ export const AdminStudentView = IDL.Record({
   'completedEnrollmentsCount' : IDL.Nat,
   'profile' : StudentProfile,
 });
+export const TestAnalytics = IDL.Record({
+  'avgScore' : IDL.Float64,
+  'passRate' : IDL.Float64,
+  'totalAttempts' : IDL.Nat,
+});
+export const TestAttemptAnswer = IDL.Record({
+  'id' : IDL.Nat,
+  'pointsAwarded' : IDL.Nat,
+  'attemptId' : IDL.Nat,
+  'studentAnswer' : IDL.Text,
+  'isCorrect' : IDL.Bool,
+  'questionId' : IDL.Nat,
+});
+export const MessageRole = IDL.Variant({
+  'user' : IDL.Null,
+  'assistant' : IDL.Null,
+});
+export const ChatMessage = IDL.Record({
+  'id' : IDL.Nat,
+  'content' : IDL.Text,
+  'role' : MessageRole,
+  'timestamp' : Timestamp,
+  'sessionId' : IDL.Text,
+});
 export const EnquiryStatus = IDL.Variant({
   'Contacted' : IDL.Null,
   'Pending' : IDL.Null,
@@ -286,6 +398,15 @@ export const Enquiry = IDL.Record({
   'timestamp' : Timestamp,
   'phone' : IDL.Text,
   'course' : IDL.Opt(IDL.Text),
+});
+export const EventRegistration = IDL.Record({
+  'id' : IDL.Nat,
+  'eventId' : IDL.Nat,
+  'studentId' : IDL.Text,
+  'name' : IDL.Text,
+  'email' : IDL.Text,
+  'phone' : IDL.Text,
+  'registeredAt' : Timestamp,
 });
 export const Feedback = IDL.Record({
   'id' : IDL.Text,
@@ -316,6 +437,31 @@ export const StudyMaterial = IDL.Record({
   'fileKey' : IDL.Text,
   'fileUrl' : IDL.Text,
 });
+export const AttemptStatus = IDL.Variant({
+  'submitted' : IDL.Null,
+  'in_progress' : IDL.Null,
+  'timed_out' : IDL.Null,
+});
+export const TestAttempt = IDL.Record({
+  'id' : IDL.Nat,
+  'status' : AttemptStatus,
+  'startedAt' : Timestamp,
+  'studentId' : IDL.Text,
+  'submittedAt' : IDL.Opt(Timestamp),
+  'testId' : IDL.Nat,
+});
+export const TestResult = IDL.Record({
+  'id' : IDL.Nat,
+  'studentId' : IDL.Text,
+  'attemptId' : IDL.Nat,
+  'maxPoints' : IDL.Nat,
+  'createdAt' : Timestamp,
+  'grade' : IDL.Text,
+  'totalPoints' : IDL.Nat,
+  'timeTaken' : IDL.Int,
+  'testId' : IDL.Nat,
+  'percentage' : IDL.Float64,
+});
 export const SiteSettings = IDL.Record({
   'telegramUrl' : IDL.Text,
   'heroText' : IDL.Text,
@@ -333,6 +479,12 @@ export const PurchaseCourseInput = IDL.Record({
   'amountPaid' : IDL.Nat,
   'paymentId' : IDL.Text,
   'courseId' : IDL.Nat,
+});
+export const EventRegistrationInput = IDL.Record({
+  'eventId' : IDL.Nat,
+  'name' : IDL.Text,
+  'email' : IDL.Text,
+  'phone' : IDL.Text,
 });
 export const EnquiryInput = IDL.Record({
   'name' : IDL.Text,
@@ -362,10 +514,13 @@ export const MaterialInput = IDL.Record({
 
 export const idlService = IDL.Service({
   'addBookmark' : IDL.Func([BookmarkInput], [Bookmark], []),
+  'clearChatSession' : IDL.Func([IDL.Text], [IDL.Bool], []),
   'confirmPayment' : IDL.Func([ConfirmPaymentInput], [IDL.Opt(Enrollment)], []),
   'createAnnouncement' : IDL.Func([AnnouncementInput], [Announcement], []),
   'createCoupon' : IDL.Func([CouponInput], [Coupon], []),
   'createCourse' : IDL.Func([CourseInput], [Course], []),
+  'createDownloadItem' : IDL.Func([DownloadItemInput], [DownloadItem], []),
+  'createEvent' : IDL.Func([EventInput], [Event], []),
   'createGalleryImage' : IDL.Func([GalleryImageInput], [GalleryImage], []),
   'createNotification' : IDL.Func(
       [NotificationInput],
@@ -373,6 +528,7 @@ export const idlService = IDL.Service({
       [],
     ),
   'createProduct' : IDL.Func([ProductInput], [Product], []),
+  'createQuestion' : IDL.Func([QuestionInput], [Question], []),
   'createTeacher' : IDL.Func([TeacherInput], [Teacher], []),
   'createTestimonial' : IDL.Func([TestimonialInput], [Testimonial], []),
   'createVideo' : IDL.Func(
@@ -383,9 +539,12 @@ export const idlService = IDL.Service({
   'deleteAnnouncement' : IDL.Func([IDL.Text], [IDL.Bool], []),
   'deleteCoupon' : IDL.Func([IDL.Text], [IDL.Bool], []),
   'deleteCourse' : IDL.Func([IDL.Nat], [IDL.Bool], []),
+  'deleteDownloadItem' : IDL.Func([IDL.Nat], [IDL.Bool], []),
+  'deleteEvent' : IDL.Func([IDL.Nat], [IDL.Bool], []),
   'deleteGalleryImage' : IDL.Func([IDL.Text], [IDL.Bool], []),
   'deleteMaterial' : IDL.Func([IDL.Nat], [IDL.Bool], []),
   'deleteProduct' : IDL.Func([IDL.Nat], [IDL.Bool], []),
+  'deleteQuestion' : IDL.Func([IDL.Nat], [IDL.Bool], []),
   'deleteTeacher' : IDL.Func([IDL.Nat], [IDL.Bool], []),
   'deleteTestimonial' : IDL.Func([IDL.Text], [IDL.Bool], []),
   'deleteVideo' : IDL.Func(
@@ -400,10 +559,29 @@ export const idlService = IDL.Service({
   'getAdminPayments' : IDL.Func([], [IDL.Vec(EnrollmentAdminView)], ['query']),
   'getAdminProducts' : IDL.Func([], [IDL.Vec(Product)], ['query']),
   'getAdminStudents' : IDL.Func([], [IDL.Vec(AdminStudentView)], ['query']),
+  'getAdminTestAnalytics' : IDL.Func([IDL.Nat], [TestAnalytics], ['query']),
+  'getAttemptAnswers' : IDL.Func(
+      [IDL.Nat],
+      [IDL.Vec(TestAttemptAnswer)],
+      ['query'],
+    ),
   'getAvailableCourses' : IDL.Func([], [IDL.Vec(Course)], ['query']),
+  'getChatHistory' : IDL.Func([IDL.Text], [IDL.Vec(ChatMessage)], ['query']),
   'getCourseDetail' : IDL.Func([IDL.Nat], [IDL.Opt(Course)], ['query']),
   'getCourses' : IDL.Func([], [IDL.Vec(Course)], ['query']),
+  'getDownloadItems' : IDL.Func(
+      [IDL.Opt(DownloadCategory)],
+      [IDL.Vec(DownloadItem)],
+      ['query'],
+    ),
   'getEnquiries' : IDL.Func([], [IDL.Vec(Enquiry)], ['query']),
+  'getEventDetail' : IDL.Func([IDL.Nat], [IDL.Opt(Event)], ['query']),
+  'getEventRegistrations' : IDL.Func(
+      [IDL.Nat],
+      [IDL.Vec(EventRegistration)],
+      ['query'],
+    ),
+  'getEvents' : IDL.Func([], [IDL.Vec(Event)], ['query']),
   'getFeedback' : IDL.Func([], [IDL.Vec(Feedback)], ['query']),
   'getFeedbackByCourse' : IDL.Func([IDL.Text], [IDL.Vec(Feedback)], ['query']),
   'getGalleryImages' : IDL.Func(
@@ -416,32 +594,66 @@ export const idlService = IDL.Service({
       [IDL.Vec(StudyMaterial)],
       ['query'],
     ),
+  'getMyAttempts' : IDL.Func(
+      [IDL.Opt(IDL.Nat)],
+      [IDL.Vec(TestAttempt)],
+      ['query'],
+    ),
   'getMyBookmarks' : IDL.Func([], [IDL.Vec(Bookmark)], ['query']),
+  'getMyDownloads' : IDL.Func(
+      [IDL.Opt(DownloadCategory)],
+      [IDL.Vec(DownloadItem)],
+      ['query'],
+    ),
   'getMyEnrollments' : IDL.Func([], [IDL.Vec(Enrollment)], ['query']),
   'getMyFeedback' : IDL.Func([], [IDL.Vec(Feedback)], ['query']),
   'getMyMaterials' : IDL.Func([], [IDL.Vec(StudyMaterial)], ['query']),
   'getMyNotifications' : IDL.Func([], [IDL.Vec(Notification)], ['query']),
+  'getMyRegistrations' : IDL.Func([], [IDL.Vec(EventRegistration)], ['query']),
+  'getMyResults' : IDL.Func([], [IDL.Vec(TestResult)], ['query']),
   'getMyVideosForCourse' : IDL.Func(
       [IDL.Text],
       [IDL.Variant({ 'ok' : IDL.Vec(Video), 'err' : IDL.Text })],
       ['query'],
     ),
+  'getPastEvents' : IDL.Func([], [IDL.Vec(Event)], ['query']),
   'getPreviewVideos' : IDL.Func([], [IDL.Vec(Video)], ['query']),
   'getProductDetail' : IDL.Func([IDL.Nat], [IDL.Opt(Product)], ['query']),
   'getProducts' : IDL.Func([], [IDL.Vec(Product)], ['query']),
+  'getQuestionCount' : IDL.Func([IDL.Nat], [IDL.Nat], ['query']),
+  'getQuestionsByTest' : IDL.Func([IDL.Nat], [IDL.Vec(Question)], ['query']),
   'getSiteSettings' : IDL.Func([], [SiteSettings], ['query']),
   'getStudentProfile' : IDL.Func([], [IDL.Opt(StudentProfile)], ['query']),
   'getStudyMaterials' : IDL.Func([], [IDL.Vec(StudyMaterial)], ['query']),
   'getTeacher' : IDL.Func([IDL.Nat], [IDL.Opt(Teacher)], ['query']),
   'getTeachers' : IDL.Func([], [IDL.Vec(Teacher)], ['query']),
+  'getTestLeaderboard' : IDL.Func(
+      [IDL.Nat],
+      [IDL.Vec(IDL.Tuple(IDL.Text, IDL.Float64))],
+      ['query'],
+    ),
   'getTestimonials' : IDL.Func([], [IDL.Vec(Testimonial)], ['query']),
+  'getUpcomingEvents' : IDL.Func([], [IDL.Vec(Event)], ['query']),
   'getVideos' : IDL.Func([], [IDL.Vec(Video)], ['query']),
   'getVideosByCourse' : IDL.Func([IDL.Text], [IDL.Vec(Video)], ['query']),
+  'incrementDownloadCount' : IDL.Func([IDL.Nat], [IDL.Bool], []),
   'isEnrolled' : IDL.Func([IDL.Nat], [IDL.Bool], ['query']),
   'markAllNotificationsRead' : IDL.Func([], [IDL.Nat], []),
   'markNotificationRead' : IDL.Func([IDL.Text], [IDL.Bool], []),
   'purchaseCourse' : IDL.Func([PurchaseCourseInput], [Enrollment], []),
+  'registerForEvent' : IDL.Func(
+      [EventRegistrationInput],
+      [EventRegistration],
+      [],
+    ),
   'removeBookmark' : IDL.Func([IDL.Text], [IDL.Bool], []),
+  'sendChatMessage' : IDL.Func([IDL.Text, IDL.Text], [IDL.Text], []),
+  'startAttempt' : IDL.Func([IDL.Nat], [TestAttempt], []),
+  'submitAttempt' : IDL.Func(
+      [IDL.Nat, IDL.Vec(IDL.Tuple(IDL.Nat, IDL.Text))],
+      [TestResult],
+      [],
+    ),
   'submitEnquiry' : IDL.Func([EnquiryInput], [IDL.Nat], []),
   'submitFeedback' : IDL.Func([FeedbackInput], [Feedback], []),
   'toggleAnnouncementActive' : IDL.Func(
@@ -466,7 +678,18 @@ export const idlService = IDL.Service({
     ),
   'updateCoupon' : IDL.Func([IDL.Text, CouponInput], [IDL.Opt(Coupon)], []),
   'updateCourse' : IDL.Func([IDL.Nat, CourseInput], [IDL.Opt(Course)], []),
+  'updateDownloadItem' : IDL.Func(
+      [IDL.Nat, DownloadItemInput],
+      [IDL.Opt(DownloadItem)],
+      [],
+    ),
+  'updateEvent' : IDL.Func([IDL.Nat, EventInput], [IDL.Opt(Event)], []),
   'updateProduct' : IDL.Func([IDL.Nat, ProductInput], [IDL.Opt(Product)], []),
+  'updateQuestion' : IDL.Func(
+      [IDL.Nat, QuestionInput],
+      [IDL.Opt(Question)],
+      [],
+    ),
   'updateSiteSettings' : IDL.Func([SiteSettings], [SiteSettings], []),
   'updateStudentProfile' : IDL.Func([ProfileInput], [], []),
   'updateTeacher' : IDL.Func([IDL.Nat, TeacherInput], [IDL.Opt(Teacher)], []),
@@ -602,6 +825,68 @@ export const idlFactory = ({ IDL }) => {
     'imageUrl' : IDL.Opt(IDL.Text),
     'price' : IDL.Nat,
   });
+  const DownloadCategory = IDL.Variant({
+    'admit_card' : IDL.Null,
+    'study_notes' : IDL.Null,
+    'certificate' : IDL.Null,
+    'hall_ticket' : IDL.Null,
+  });
+  const DownloadItemInput = IDL.Record({
+    'title' : IDL.Text,
+    'subject' : IDL.Text,
+    'description' : IDL.Text,
+    'fileSize' : IDL.Text,
+    'category' : DownloadCategory,
+    'isPublic' : IDL.Bool,
+    'batchYear' : IDL.Text,
+    'fileUrl' : IDL.Text,
+  });
+  const DownloadItem = IDL.Record({
+    'id' : IDL.Nat,
+    'title' : IDL.Text,
+    'subject' : IDL.Text,
+    'createdAt' : Timestamp,
+    'description' : IDL.Text,
+    'fileSize' : IDL.Text,
+    'category' : DownloadCategory,
+    'downloadCount' : IDL.Nat,
+    'isPublic' : IDL.Bool,
+    'batchYear' : IDL.Text,
+    'fileUrl' : IDL.Text,
+  });
+  const EventStatus = IDL.Variant({
+    'upcoming' : IDL.Null,
+    'cancelled' : IDL.Null,
+    'completed' : IDL.Null,
+    'ongoing' : IDL.Null,
+  });
+  const EventInput = IDL.Record({
+    'status' : EventStatus,
+    'title' : IDL.Text,
+    'endDate' : Timestamp,
+    'description' : IDL.Text,
+    'imageUrl' : IDL.Text,
+    'topics' : IDL.Vec(IDL.Text),
+    'isVisible' : IDL.Bool,
+    'capacity' : IDL.Nat,
+    'speaker' : IDL.Text,
+    'eventDate' : Timestamp,
+  });
+  const Event = IDL.Record({
+    'id' : IDL.Nat,
+    'status' : EventStatus,
+    'title' : IDL.Text,
+    'endDate' : Timestamp,
+    'registeredCount' : IDL.Nat,
+    'createdAt' : Timestamp,
+    'description' : IDL.Text,
+    'imageUrl' : IDL.Text,
+    'topics' : IDL.Vec(IDL.Text),
+    'isVisible' : IDL.Bool,
+    'capacity' : IDL.Nat,
+    'speaker' : IDL.Text,
+    'eventDate' : Timestamp,
+  });
   const GalleryCategory = IDL.Variant({
     'team' : IDL.Null,
     'results' : IDL.Null,
@@ -668,6 +953,32 @@ export const idlFactory = ({ IDL }) => {
     'imageUrl' : IDL.Text,
     'category' : Category,
     'price' : IDL.Float64,
+  });
+  const QuestionType = IDL.Variant({
+    'multiple_choice' : IDL.Null,
+    'essay' : IDL.Null,
+  });
+  const QuestionInput = IDL.Record({
+    'explanation' : IDL.Text,
+    'text' : IDL.Text,
+    'correctAnswer' : IDL.Text,
+    'questionType' : QuestionType,
+    'testId' : IDL.Nat,
+    'options' : IDL.Vec(IDL.Text),
+    'orderIndex' : IDL.Nat,
+    'points' : IDL.Nat,
+  });
+  const Question = IDL.Record({
+    'id' : IDL.Nat,
+    'explanation' : IDL.Text,
+    'createdAt' : Timestamp,
+    'text' : IDL.Text,
+    'correctAnswer' : IDL.Text,
+    'questionType' : QuestionType,
+    'testId' : IDL.Nat,
+    'options' : IDL.Vec(IDL.Text),
+    'orderIndex' : IDL.Nat,
+    'points' : IDL.Nat,
   });
   const TeacherInput = IDL.Record({
     'name' : IDL.Text,
@@ -744,6 +1055,30 @@ export const idlFactory = ({ IDL }) => {
     'completedEnrollmentsCount' : IDL.Nat,
     'profile' : StudentProfile,
   });
+  const TestAnalytics = IDL.Record({
+    'avgScore' : IDL.Float64,
+    'passRate' : IDL.Float64,
+    'totalAttempts' : IDL.Nat,
+  });
+  const TestAttemptAnswer = IDL.Record({
+    'id' : IDL.Nat,
+    'pointsAwarded' : IDL.Nat,
+    'attemptId' : IDL.Nat,
+    'studentAnswer' : IDL.Text,
+    'isCorrect' : IDL.Bool,
+    'questionId' : IDL.Nat,
+  });
+  const MessageRole = IDL.Variant({
+    'user' : IDL.Null,
+    'assistant' : IDL.Null,
+  });
+  const ChatMessage = IDL.Record({
+    'id' : IDL.Nat,
+    'content' : IDL.Text,
+    'role' : MessageRole,
+    'timestamp' : Timestamp,
+    'sessionId' : IDL.Text,
+  });
   const EnquiryStatus = IDL.Variant({
     'Contacted' : IDL.Null,
     'Pending' : IDL.Null,
@@ -757,6 +1092,15 @@ export const idlFactory = ({ IDL }) => {
     'timestamp' : Timestamp,
     'phone' : IDL.Text,
     'course' : IDL.Opt(IDL.Text),
+  });
+  const EventRegistration = IDL.Record({
+    'id' : IDL.Nat,
+    'eventId' : IDL.Nat,
+    'studentId' : IDL.Text,
+    'name' : IDL.Text,
+    'email' : IDL.Text,
+    'phone' : IDL.Text,
+    'registeredAt' : Timestamp,
   });
   const Feedback = IDL.Record({
     'id' : IDL.Text,
@@ -787,6 +1131,31 @@ export const idlFactory = ({ IDL }) => {
     'fileKey' : IDL.Text,
     'fileUrl' : IDL.Text,
   });
+  const AttemptStatus = IDL.Variant({
+    'submitted' : IDL.Null,
+    'in_progress' : IDL.Null,
+    'timed_out' : IDL.Null,
+  });
+  const TestAttempt = IDL.Record({
+    'id' : IDL.Nat,
+    'status' : AttemptStatus,
+    'startedAt' : Timestamp,
+    'studentId' : IDL.Text,
+    'submittedAt' : IDL.Opt(Timestamp),
+    'testId' : IDL.Nat,
+  });
+  const TestResult = IDL.Record({
+    'id' : IDL.Nat,
+    'studentId' : IDL.Text,
+    'attemptId' : IDL.Nat,
+    'maxPoints' : IDL.Nat,
+    'createdAt' : Timestamp,
+    'grade' : IDL.Text,
+    'totalPoints' : IDL.Nat,
+    'timeTaken' : IDL.Int,
+    'testId' : IDL.Nat,
+    'percentage' : IDL.Float64,
+  });
   const SiteSettings = IDL.Record({
     'telegramUrl' : IDL.Text,
     'heroText' : IDL.Text,
@@ -804,6 +1173,12 @@ export const idlFactory = ({ IDL }) => {
     'amountPaid' : IDL.Nat,
     'paymentId' : IDL.Text,
     'courseId' : IDL.Nat,
+  });
+  const EventRegistrationInput = IDL.Record({
+    'eventId' : IDL.Nat,
+    'name' : IDL.Text,
+    'email' : IDL.Text,
+    'phone' : IDL.Text,
   });
   const EnquiryInput = IDL.Record({
     'name' : IDL.Text,
@@ -833,6 +1208,7 @@ export const idlFactory = ({ IDL }) => {
   
   return IDL.Service({
     'addBookmark' : IDL.Func([BookmarkInput], [Bookmark], []),
+    'clearChatSession' : IDL.Func([IDL.Text], [IDL.Bool], []),
     'confirmPayment' : IDL.Func(
         [ConfirmPaymentInput],
         [IDL.Opt(Enrollment)],
@@ -841,6 +1217,8 @@ export const idlFactory = ({ IDL }) => {
     'createAnnouncement' : IDL.Func([AnnouncementInput], [Announcement], []),
     'createCoupon' : IDL.Func([CouponInput], [Coupon], []),
     'createCourse' : IDL.Func([CourseInput], [Course], []),
+    'createDownloadItem' : IDL.Func([DownloadItemInput], [DownloadItem], []),
+    'createEvent' : IDL.Func([EventInput], [Event], []),
     'createGalleryImage' : IDL.Func([GalleryImageInput], [GalleryImage], []),
     'createNotification' : IDL.Func(
         [NotificationInput],
@@ -848,6 +1226,7 @@ export const idlFactory = ({ IDL }) => {
         [],
       ),
     'createProduct' : IDL.Func([ProductInput], [Product], []),
+    'createQuestion' : IDL.Func([QuestionInput], [Question], []),
     'createTeacher' : IDL.Func([TeacherInput], [Teacher], []),
     'createTestimonial' : IDL.Func([TestimonialInput], [Testimonial], []),
     'createVideo' : IDL.Func(
@@ -858,9 +1237,12 @@ export const idlFactory = ({ IDL }) => {
     'deleteAnnouncement' : IDL.Func([IDL.Text], [IDL.Bool], []),
     'deleteCoupon' : IDL.Func([IDL.Text], [IDL.Bool], []),
     'deleteCourse' : IDL.Func([IDL.Nat], [IDL.Bool], []),
+    'deleteDownloadItem' : IDL.Func([IDL.Nat], [IDL.Bool], []),
+    'deleteEvent' : IDL.Func([IDL.Nat], [IDL.Bool], []),
     'deleteGalleryImage' : IDL.Func([IDL.Text], [IDL.Bool], []),
     'deleteMaterial' : IDL.Func([IDL.Nat], [IDL.Bool], []),
     'deleteProduct' : IDL.Func([IDL.Nat], [IDL.Bool], []),
+    'deleteQuestion' : IDL.Func([IDL.Nat], [IDL.Bool], []),
     'deleteTeacher' : IDL.Func([IDL.Nat], [IDL.Bool], []),
     'deleteTestimonial' : IDL.Func([IDL.Text], [IDL.Bool], []),
     'deleteVideo' : IDL.Func(
@@ -879,10 +1261,29 @@ export const idlFactory = ({ IDL }) => {
       ),
     'getAdminProducts' : IDL.Func([], [IDL.Vec(Product)], ['query']),
     'getAdminStudents' : IDL.Func([], [IDL.Vec(AdminStudentView)], ['query']),
+    'getAdminTestAnalytics' : IDL.Func([IDL.Nat], [TestAnalytics], ['query']),
+    'getAttemptAnswers' : IDL.Func(
+        [IDL.Nat],
+        [IDL.Vec(TestAttemptAnswer)],
+        ['query'],
+      ),
     'getAvailableCourses' : IDL.Func([], [IDL.Vec(Course)], ['query']),
+    'getChatHistory' : IDL.Func([IDL.Text], [IDL.Vec(ChatMessage)], ['query']),
     'getCourseDetail' : IDL.Func([IDL.Nat], [IDL.Opt(Course)], ['query']),
     'getCourses' : IDL.Func([], [IDL.Vec(Course)], ['query']),
+    'getDownloadItems' : IDL.Func(
+        [IDL.Opt(DownloadCategory)],
+        [IDL.Vec(DownloadItem)],
+        ['query'],
+      ),
     'getEnquiries' : IDL.Func([], [IDL.Vec(Enquiry)], ['query']),
+    'getEventDetail' : IDL.Func([IDL.Nat], [IDL.Opt(Event)], ['query']),
+    'getEventRegistrations' : IDL.Func(
+        [IDL.Nat],
+        [IDL.Vec(EventRegistration)],
+        ['query'],
+      ),
+    'getEvents' : IDL.Func([], [IDL.Vec(Event)], ['query']),
     'getFeedback' : IDL.Func([], [IDL.Vec(Feedback)], ['query']),
     'getFeedbackByCourse' : IDL.Func(
         [IDL.Text],
@@ -899,32 +1300,70 @@ export const idlFactory = ({ IDL }) => {
         [IDL.Vec(StudyMaterial)],
         ['query'],
       ),
+    'getMyAttempts' : IDL.Func(
+        [IDL.Opt(IDL.Nat)],
+        [IDL.Vec(TestAttempt)],
+        ['query'],
+      ),
     'getMyBookmarks' : IDL.Func([], [IDL.Vec(Bookmark)], ['query']),
+    'getMyDownloads' : IDL.Func(
+        [IDL.Opt(DownloadCategory)],
+        [IDL.Vec(DownloadItem)],
+        ['query'],
+      ),
     'getMyEnrollments' : IDL.Func([], [IDL.Vec(Enrollment)], ['query']),
     'getMyFeedback' : IDL.Func([], [IDL.Vec(Feedback)], ['query']),
     'getMyMaterials' : IDL.Func([], [IDL.Vec(StudyMaterial)], ['query']),
     'getMyNotifications' : IDL.Func([], [IDL.Vec(Notification)], ['query']),
+    'getMyRegistrations' : IDL.Func(
+        [],
+        [IDL.Vec(EventRegistration)],
+        ['query'],
+      ),
+    'getMyResults' : IDL.Func([], [IDL.Vec(TestResult)], ['query']),
     'getMyVideosForCourse' : IDL.Func(
         [IDL.Text],
         [IDL.Variant({ 'ok' : IDL.Vec(Video), 'err' : IDL.Text })],
         ['query'],
       ),
+    'getPastEvents' : IDL.Func([], [IDL.Vec(Event)], ['query']),
     'getPreviewVideos' : IDL.Func([], [IDL.Vec(Video)], ['query']),
     'getProductDetail' : IDL.Func([IDL.Nat], [IDL.Opt(Product)], ['query']),
     'getProducts' : IDL.Func([], [IDL.Vec(Product)], ['query']),
+    'getQuestionCount' : IDL.Func([IDL.Nat], [IDL.Nat], ['query']),
+    'getQuestionsByTest' : IDL.Func([IDL.Nat], [IDL.Vec(Question)], ['query']),
     'getSiteSettings' : IDL.Func([], [SiteSettings], ['query']),
     'getStudentProfile' : IDL.Func([], [IDL.Opt(StudentProfile)], ['query']),
     'getStudyMaterials' : IDL.Func([], [IDL.Vec(StudyMaterial)], ['query']),
     'getTeacher' : IDL.Func([IDL.Nat], [IDL.Opt(Teacher)], ['query']),
     'getTeachers' : IDL.Func([], [IDL.Vec(Teacher)], ['query']),
+    'getTestLeaderboard' : IDL.Func(
+        [IDL.Nat],
+        [IDL.Vec(IDL.Tuple(IDL.Text, IDL.Float64))],
+        ['query'],
+      ),
     'getTestimonials' : IDL.Func([], [IDL.Vec(Testimonial)], ['query']),
+    'getUpcomingEvents' : IDL.Func([], [IDL.Vec(Event)], ['query']),
     'getVideos' : IDL.Func([], [IDL.Vec(Video)], ['query']),
     'getVideosByCourse' : IDL.Func([IDL.Text], [IDL.Vec(Video)], ['query']),
+    'incrementDownloadCount' : IDL.Func([IDL.Nat], [IDL.Bool], []),
     'isEnrolled' : IDL.Func([IDL.Nat], [IDL.Bool], ['query']),
     'markAllNotificationsRead' : IDL.Func([], [IDL.Nat], []),
     'markNotificationRead' : IDL.Func([IDL.Text], [IDL.Bool], []),
     'purchaseCourse' : IDL.Func([PurchaseCourseInput], [Enrollment], []),
+    'registerForEvent' : IDL.Func(
+        [EventRegistrationInput],
+        [EventRegistration],
+        [],
+      ),
     'removeBookmark' : IDL.Func([IDL.Text], [IDL.Bool], []),
+    'sendChatMessage' : IDL.Func([IDL.Text, IDL.Text], [IDL.Text], []),
+    'startAttempt' : IDL.Func([IDL.Nat], [TestAttempt], []),
+    'submitAttempt' : IDL.Func(
+        [IDL.Nat, IDL.Vec(IDL.Tuple(IDL.Nat, IDL.Text))],
+        [TestResult],
+        [],
+      ),
     'submitEnquiry' : IDL.Func([EnquiryInput], [IDL.Nat], []),
     'submitFeedback' : IDL.Func([FeedbackInput], [Feedback], []),
     'toggleAnnouncementActive' : IDL.Func(
@@ -949,7 +1388,18 @@ export const idlFactory = ({ IDL }) => {
       ),
     'updateCoupon' : IDL.Func([IDL.Text, CouponInput], [IDL.Opt(Coupon)], []),
     'updateCourse' : IDL.Func([IDL.Nat, CourseInput], [IDL.Opt(Course)], []),
+    'updateDownloadItem' : IDL.Func(
+        [IDL.Nat, DownloadItemInput],
+        [IDL.Opt(DownloadItem)],
+        [],
+      ),
+    'updateEvent' : IDL.Func([IDL.Nat, EventInput], [IDL.Opt(Event)], []),
     'updateProduct' : IDL.Func([IDL.Nat, ProductInput], [IDL.Opt(Product)], []),
+    'updateQuestion' : IDL.Func(
+        [IDL.Nat, QuestionInput],
+        [IDL.Opt(Question)],
+        [],
+      ),
     'updateSiteSettings' : IDL.Func([SiteSettings], [SiteSettings], []),
     'updateStudentProfile' : IDL.Func([ProfileInput], [], []),
     'updateTeacher' : IDL.Func([IDL.Nat, TeacherInput], [IDL.Opt(Teacher)], []),

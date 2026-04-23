@@ -5,12 +5,15 @@ import type {
   ConfirmPaymentInput,
   CouponInput,
   CourseInput,
+  DownloadCategory,
+  EventRegistrationInput,
   FeedbackInput,
   GalleryCategory,
   GalleryImageInput,
   MaterialInput,
   NotificationInput,
   PurchaseCourseInput,
+  QuestionInput,
   SiteSettings,
   TeacherInput,
   TestimonialInput,
@@ -629,5 +632,247 @@ export function useCreateNotification() {
   return useMutation({
     mutationFn: (input: NotificationInput) => actor!.createNotification(input),
     onSuccess: () => qc.invalidateQueries({ queryKey: ["notifications"] }),
+  });
+}
+
+// ─── Questions ────────────────────────────────────────────────────────────────
+export function useQuestions(testId: bigint | null) {
+  const { actor, enabled } = useActorGuard();
+  return useQuery({
+    queryKey: ["questions", testId?.toString()],
+    queryFn: () => actor!.getQuestionsByTest(testId!),
+    enabled: enabled && testId !== null,
+  });
+}
+
+export function useCreateQuestion() {
+  const { actor } = useActor(createActor);
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (input: QuestionInput) => actor!.createQuestion(input),
+    onSuccess: (_data, variables) => {
+      qc.invalidateQueries({
+        queryKey: ["questions", variables.testId.toString()],
+      });
+    },
+  });
+}
+
+export function useDeleteQuestion() {
+  const { actor } = useActor(createActor);
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (id: bigint) => actor!.deleteQuestion(id),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["questions"] }),
+  });
+}
+
+// ─── Test Attempts ────────────────────────────────────────────────────────────
+export function useStartAttempt() {
+  const { actor } = useActor(createActor);
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (testId: bigint) => actor!.startAttempt(testId),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["attempts"] }),
+  });
+}
+
+export function useSubmitAttempt() {
+  const { actor } = useActor(createActor);
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({
+      attemptId,
+      answers,
+    }: {
+      attemptId: bigint;
+      answers: Array<[bigint, string]>;
+    }) => actor!.submitAttempt(attemptId, answers),
+    onSuccess: (_data, variables) => {
+      qc.invalidateQueries({ queryKey: ["attempts"] });
+      qc.invalidateQueries({ queryKey: ["results"] });
+      qc.invalidateQueries({
+        queryKey: ["attemptAnswers", variables.attemptId.toString()],
+      });
+    },
+  });
+}
+
+export function useMyAttempts(testId?: bigint) {
+  const { actor, enabled } = useActorGuard();
+  return useQuery({
+    queryKey: ["attempts", testId?.toString() ?? "all"],
+    queryFn: () => actor!.getMyAttempts(testId ?? null),
+    enabled,
+  });
+}
+
+export function useMyResults() {
+  const { actor, enabled } = useActorGuard();
+  return useQuery({
+    queryKey: ["results"],
+    queryFn: () => actor!.getMyResults(),
+    enabled,
+  });
+}
+
+export function useAttemptAnswers(attemptId: bigint | null) {
+  const { actor, enabled } = useActorGuard();
+  return useQuery({
+    queryKey: ["attemptAnswers", attemptId?.toString()],
+    queryFn: () => actor!.getAttemptAnswers(attemptId!),
+    enabled: enabled && attemptId !== null,
+  });
+}
+
+export function useTestLeaderboard(testId: bigint | null) {
+  const { actor, enabled } = useActorGuard();
+  return useQuery({
+    queryKey: ["leaderboard", testId?.toString()],
+    queryFn: () => actor!.getTestLeaderboard(testId!),
+    enabled: enabled && testId !== null,
+  });
+}
+
+export function useAdminTestAnalytics(testId: bigint | null) {
+  const { actor, enabled } = useActorGuard();
+  return useQuery({
+    queryKey: ["admin", "testAnalytics", testId?.toString()],
+    queryFn: () => actor!.getAdminTestAnalytics(testId!),
+    enabled: enabled && testId !== null,
+  });
+}
+
+// ─── Events ───────────────────────────────────────────────────────────────────
+export function useEvents() {
+  const { actor, enabled } = useActorGuard();
+  return useQuery({
+    queryKey: ["events"],
+    queryFn: () => actor!.getEvents(),
+    enabled,
+  });
+}
+
+export function useUpcomingEvents() {
+  const { actor, isFetching } = useActor(createActor);
+  return useQuery({
+    queryKey: ["events", "upcoming"],
+    queryFn: () => actor!.getUpcomingEvents(),
+    enabled: !!actor && !isFetching,
+  });
+}
+
+export function usePastEvents() {
+  const { actor, isFetching } = useActor(createActor);
+  return useQuery({
+    queryKey: ["events", "past"],
+    queryFn: () => actor!.getPastEvents(),
+    enabled: !!actor && !isFetching,
+  });
+}
+
+export function useEventDetail(id: bigint | null) {
+  const { actor, enabled } = useActorGuard();
+  return useQuery({
+    queryKey: ["events", id?.toString()],
+    queryFn: () => actor!.getEventDetail(id!),
+    enabled: enabled && id !== null,
+  });
+}
+
+export function useRegisterForEvent() {
+  const { actor } = useActor(createActor);
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (input: EventRegistrationInput) =>
+      actor!.registerForEvent(input),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["events"] });
+      qc.invalidateQueries({ queryKey: ["eventRegistrations", "mine"] });
+    },
+  });
+}
+
+export function useMyEventRegistrations() {
+  const { actor, enabled } = useActorGuard();
+  return useQuery({
+    queryKey: ["eventRegistrations", "mine"],
+    queryFn: () => actor!.getMyRegistrations(),
+    enabled,
+  });
+}
+
+export function useEventRegistrations(eventId: bigint | null) {
+  const { actor, enabled } = useActorGuard();
+  return useQuery({
+    queryKey: ["eventRegistrations", eventId?.toString()],
+    queryFn: () => actor!.getEventRegistrations(eventId!),
+    enabled: enabled && eventId !== null,
+  });
+}
+
+// ─── Downloads ────────────────────────────────────────────────────────────────
+export function useDownloadItems(category?: DownloadCategory | null) {
+  const { actor, enabled } = useActorGuard();
+  return useQuery({
+    queryKey: ["downloads", category ?? "all"],
+    queryFn: () => actor!.getDownloadItems(category ?? null),
+    enabled,
+  });
+}
+
+export function useMyDownloads() {
+  const { actor, enabled } = useActorGuard();
+  return useQuery({
+    queryKey: ["downloads", "mine"],
+    queryFn: () => actor!.getMyDownloads(null),
+    enabled,
+  });
+}
+
+export function useIncrementDownload() {
+  const { actor } = useActor(createActor);
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (id: bigint) => actor!.incrementDownloadCount(id),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["downloads"] }),
+  });
+}
+
+// ─── Chat ─────────────────────────────────────────────────────────────────────
+export function useSendChatMessage() {
+  const { actor } = useActor(createActor);
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({
+      sessionId,
+      message,
+    }: {
+      sessionId: string;
+      message: string;
+    }) => actor!.sendChatMessage(sessionId, message),
+    onSuccess: (_data, variables) => {
+      qc.invalidateQueries({ queryKey: ["chat", variables.sessionId] });
+    },
+  });
+}
+
+export function useChatHistory(sessionId: string | null) {
+  const { actor, enabled } = useActorGuard();
+  return useQuery({
+    queryKey: ["chat", sessionId],
+    queryFn: () => actor!.getChatHistory(sessionId!),
+    enabled: enabled && sessionId !== null && sessionId.length > 0,
+  });
+}
+
+export function useClearChatSession() {
+  const { actor } = useActor(createActor);
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (sessionId: string) => actor!.clearChatSession(sessionId),
+    onSuccess: (_data, sessionId) => {
+      qc.invalidateQueries({ queryKey: ["chat", sessionId] });
+    },
   });
 }

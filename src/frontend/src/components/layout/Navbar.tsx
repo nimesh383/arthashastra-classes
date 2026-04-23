@@ -22,7 +22,9 @@ const publicNavLinks = [
   { label: "Courses", href: "/courses" },
   { label: "Comparison", href: "/comparison" },
   { label: "Study Materials", href: "/study-materials" },
-  { label: "Tutorials", href: "/tutorials" },
+  { label: "Downloads", href: "/downloads" },
+  { label: "Tests", href: "/tests" },
+  { label: "Events", href: "/events" },
   { label: "Blog", href: "/blog" },
   { label: "Contact", href: "/contact" },
   { label: "Store", href: "/store" },
@@ -59,7 +61,12 @@ export default function Navbar() {
   // Admin routes use a separate router, so use native hrefs instead of Link
   const portalHref =
     role === "admin" || role === "teacher" ? "/admin" : "/dashboard";
-  const portalLabel = role === "admin" ? "Admin Portal" : "Dashboard";
+  const portalLabel =
+    role === "admin"
+      ? "Admin Portal"
+      : role === "teacher"
+        ? "Teacher Portal"
+        : "Dashboard";
   const PortalIcon = role === "admin" ? Settings : LayoutDashboard;
 
   return (
@@ -116,6 +123,20 @@ export default function Navbar() {
                 <span className="absolute inset-0 rounded-lg bg-white/5 opacity-0 group-hover:opacity-100 transition-smooth" />
               </Link>
             ))}
+            {role === "teacher" && (
+              <a
+                href="/admin"
+                className={`px-3 py-2 text-sm font-medium rounded-lg transition-smooth relative group ${
+                  pathname.startsWith("/admin")
+                    ? "text-cyan-400"
+                    : "text-foreground/70 hover:text-foreground"
+                }`}
+                data-ocid="navbar.teacher-portal.link"
+              >
+                Teacher Portal
+                <span className="absolute inset-0 rounded-lg bg-white/5 opacity-0 group-hover:opacity-100 transition-smooth" />
+              </a>
+            )}
           </div>
 
           {/* CTA — auth-aware */}

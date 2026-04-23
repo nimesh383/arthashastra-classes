@@ -1,28 +1,26 @@
 {
-  "overview": "A next-generation, cinematic ed-tech platform for Arthashastra Classes — a commerce coaching institute in Bhopal, India. Features immersive 3D animations, real authentication, a full admin content management system, student and teacher dashboards, Stripe payments, and a dynamic course library — all wrapped in a futuristic glassmorphism design.",
+  "overview": "A comprehensive, cinematic ed-tech platform for Arthashastra Classes — a commerce coaching institute in Bhopal. Features a real AI chatbot, live test system with question bank, teacher dashboard, full payment checkout, download center, events system, and premium futuristic UI with glassmorphism and neon glow aesthetics.",
   "features": [
-    "Cinematic 3D hero with floating particles and animated counters",
-    "Role-based access: student, teacher, and admin portals",
-    "Full admin CMS: manage courses, teachers, testimonials, announcements, and site settings",
-    "Student dashboard with enrolled courses, materials, and progress tracking",
-    "Stripe-powered course and store checkout with coupon codes",
-    "Gallery with lightbox, category filters, and event photos",
-    "Dynamic announcement banner and testimonials carousel from backend data",
-    "Faculty detail pages with qualifications and ratings",
-    "Legal pages: Privacy Policy, Terms, and Refund Policy",
-    "WhatsApp chat button, back-to-top, exit-intent lead popup, and mobile CTA bar",
-    "Bookmarks and notification center in student dashboard",
-    "404 animated error page and cookie consent banner"
+    "AI chatbot powered by OpenAI/Claude for student doubt solving and course suggestions",
+    "Live test system with question bank, countdown timer, MCQ answer validation, and score analytics",
+    "Teacher dashboard for creating tests, uploading materials, and tracking batch performance",
+    "Full payment checkout wired to backend purchase flow with success/history pages",
+    "Download center for notes, admit cards, hall tickets, and certificates",
+    "Events and webinar system with countdown timers and registration",
+    "Enhanced student dashboard with attendance ring, progress bars, and AI recommendations",
+    "Enhanced admin dashboard with revenue charts and enrollment trends",
+    "Cinematic futuristic UI: glassmorphism, OKLCH neon palette, Framer Motion animations"
   ],
   "category": "education",
   "tags": [
     "edtech",
     "coaching",
     "commerce",
+    "test-series",
+    "ai-chatbot",
     "dashboard",
     "payments",
-    "animations",
-    "glassmorphism"
+    "futuristic-ui"
   ],
-  "last_updated": "2026-04-15T17:48:37.351Z"
+  "last_updated": "2026-04-22T18:47:11.823Z"
 }
